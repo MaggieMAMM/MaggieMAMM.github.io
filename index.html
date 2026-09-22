@@ -1,24 +1,1723 @@
 <!DOCTYPE html>
-<html>
-    <head>
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NW637LW6');</script>
-    <!-- End Google Tag Manager -->
-    </head>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Opsmate</title>
+<style>
+  :root {
+    --paper: #F5F6F8;
+    --surface: #FFFFFF;
+    --surface-2: #EEF1F4;
+    --ink: #0F1419;
+    --ink-2: #45505C;
+    --ink-3: #7A8490;
+    --line: #E3E7EC;
+    --line-strong: #C9D0D8;
+    --accent: #0E7490;
+    --accent-strong: #0B5E74;
+    --accent-soft: #E4F2F5;
+    --ok: #18794E;
+    --ok-soft: #E7F4ED;
+    --warn: #B45309;
+    --warn-soft: #FCF1DE;
+    --risk: #B42318;
+    --risk-soft: #FCEAE9;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, system-ui, sans-serif;
+    --mono: "SF Mono", ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace;
+    --r: 12px;
+    --r-sm: 8px;
+    --shadow: 0 1px 2px rgba(15,20,25,.04), 0 4px 16px rgba(15,20,25,.05);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+  }
+
+  /* ---------- Left sidebar ---------- */
+  .sidebar {
+    position: fixed; left: 0; top: 0; bottom: 0;
+    width: 210px;
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column;
+    padding: 16px 12px;
+    z-index: 70;
+  }
+  .sb-brand {
+    font-weight: 700; font-size: 14px; letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 6px 18px;
+  }
+  .sb-brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .sb-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .sb-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 11px; border-radius: 8px; border: none; background: transparent;
+    font-family: var(--sans); font-size: 13.5px; font-weight: 500; color: var(--ink-2);
+    cursor: pointer; text-align: left; width: 100%;
+  }
+  .sb-item:hover { background: var(--surface-2); }
+  .sb-item.active { background: var(--accent-soft); color: var(--accent-strong); font-weight: 600; }
+  .sb-item .ico { width: 18px; height: 18px; flex: 0 0 auto; opacity: .8; }
+  .sb-item.active .ico { opacity: 1; }
+  .sb-foot { border-top: 1px solid var(--line); padding-top: 14px; }
+  .persona { display: flex; align-items: center; gap: 9px; padding: 0 6px; }
+  .avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #123E4B);
+    color: #fff; font-size: 12px; font-weight: 600;
+    display: grid; place-items: center; letter-spacing: 0.02em;
+  }
+  .persona .who { font-size: 12.5px; font-weight: 600; line-height: 1.15; }
+  .persona .role { font-size: 11px; color: var(--ink-3); }
+  .delegation {
+    display: flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 11px; color: var(--ink-2);
+    border: 1px solid var(--line); padding: 5px 10px; border-radius: 999px;
+    background: var(--surface); margin: 12px 6px 0; width: fit-content;
+  }
+  .delegation b { color: var(--accent-strong); }
+
+  /* ---------- Right chat panel ---------- */
+  .chat-panel {
+    position: fixed; right: 0; top: 0; bottom: 0;
+    width: 360px;
+    background: var(--surface);
+    border-left: 1px solid var(--line);
+    z-index: 65;
+    display: flex; flex-direction: column;
+  }
+  .chat-panel-head {
+    padding: 16px 18px 13px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 9px;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+  }
+  .chat-panel-head .ico { width: 18px; height: 18px; color: var(--accent-strong); }
+  .chat-panel-head .tag { margin-left: auto; font-family: var(--mono); font-size: 9.5px; letter-spacing: .03em; color: var(--ink-3); background: var(--surface-2); border: 1px solid var(--line); padding: 2px 7px; border-radius: 999px; }
+  .chat-panel-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 16px; }
+  .chat-panel .chips { margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .chat-panel .chip { font-size: 12.5px; padding: 8px 12px; line-height: 1.4; text-align: left; border-radius: 10px; }
+  .chat-panel .chat { flex: 1; overflow-y: auto; margin-bottom: 14px; padding-right: 4px; gap: 12px; }
+  .chat-panel .bubble { max-width: 100%; font-size: 13.5px; padding: 11px 14px; }
+  .chat-panel .chat-input { margin-top: auto; }
+  .chat-panel { transition: transform .28s ease; }
+  .chat-panel.minimized { transform: translateX(100%); }
+  .chat-min-btn { background: none; border: none; cursor: pointer; color: var(--ink-3); font-size: 15px; padding: 2px 6px; border-radius: 6px; margin-left: auto; }
+  .chat-min-btn:hover { background: var(--surface-2); color: var(--ink); }
+  .chat-reopen { position: fixed; right: 16px; bottom: 16px; z-index: 75; width: 44px; height: 44px; border-radius: 50%; background: var(--accent-strong); color: #fff; border: none; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(11,94,116,.35); font-size: 18px; }
+  .chat-reopen.show { display: flex; }
+  body.chat-min .main { margin-right: 0; }
+  body.chat-min .rail-wrap { right: 0; }
+
+  /* ---------- Main area ---------- */
+  .main { margin-left: 210px; margin-right: 360px; min-height: 100vh; }
+
+  .mode { display: none; }
+  .mode.active { display: block; }
+
+  .stage { max-width: 1080px; margin: 0 auto; padding: 32px 28px 120px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  h1 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .lead { color: var(--ink-2); font-size: 16px; margin: 0 0 26px; line-height: 1.5; }
+  .lead b { color: var(--ink); font-weight: 600; }
+
+  .badge {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em;
+    padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+  }
+  .badge.p0 { background: var(--risk-soft); color: var(--risk); }
+  .badge.p1 { background: var(--warn-soft); color: var(--warn); }
+  .badge.p2 { background: var(--surface-2); color: var(--ink-3); }
+  .badge.resolve { background: var(--accent-soft); color: var(--accent-strong); }
+
+  /* ---------- Today: brief ---------- */
+  .priority-list { display: flex; flex-direction: column; gap: 14px; }
+  .pcard {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 18px 20px; box-shadow: var(--shadow); cursor: pointer;
+    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .pcard:hover { transform: translateY(-1px); border-color: var(--line-strong); box-shadow: 0 6px 20px rgba(15,20,25,.08); }
+  .pcard.hero { border-color: var(--risk); box-shadow: 0 0 0 1px var(--risk) inset, var(--shadow); }
+  .pcard .body { flex: 1; min-width: 0; }
+  .pcard .title { font-size: 15.5px; font-weight: 600; margin-bottom: 3px; }
+  .pcard .desc { font-size: 13px; color: var(--ink-2); }
+  .pcard .desc .num { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+  .pcard .cta { flex: 0 0 auto; color: var(--accent-strong); font-weight: 600; font-size: 13.5px; white-space: nowrap; }
+
+  .setaside { margin-top: 28px; }
+  .setaside-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 12px; }
+  .setaside-head .n { font-family: var(--mono); color: var(--ink-3); font-weight: 700; }
+  .setaside-head .note { font-weight: 400; color: var(--ink-3); font-size: 12px; }
+  .sa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 700px) { .sa-grid { grid-template-columns: 1fr; } }
+  .sa-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+    padding: 11px 14px; display: flex; gap: 11px; align-items: baseline;
+    opacity: .62; filter: saturate(.35); transition: opacity .2s ease;
+  }
+  .sa-card:hover { opacity: .85; }
+  .sa-src { font-family: var(--mono); font-size: 10px; letter-spacing: .04em; color: var(--ink-3); flex: 0 0 auto; }
+  .sa-t { font-size: 13px; color: var(--ink-2); }
+  .sa-t .sa-sub { color: var(--ink-3); font-size: 12px; }
+
+  /* ---------- Inbox (incoming message) ---------- */
+  .inbox { margin-bottom: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+  .inbox-head { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: none; border: none; cursor: pointer; text-align: left; font-family: var(--sans); }
+  .inbox-head:hover { background: var(--surface-2); }
+  .inbox-avatar { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, #B45309, #6B3A00); color: #fff; font-size: 12px; font-weight: 600; display: grid; place-items: center; }
+  .inbox-txt { flex: 1; min-width: 0; }
+  .inbox-name { display: block; font-size: 13px; font-weight: 600; color: var(--ink); }
+  .inbox-preview { display: block; font-size: 12.5px; color: var(--ink-2); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inbox-time { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .inbox-chev { color: var(--ink-3); font-size: 11px; transition: transform .2s ease; }
+  .inbox.open .inbox-chev { transform: rotate(180deg); }
+  .inbox-thread { display: none; padding: 4px 16px 16px; border-top: 1px solid var(--line); }
+  .inbox.open .inbox-thread { display: block; }
+  .im-bubble { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; border-top-left-radius: 4px; padding: 10px 14px; font-size: 13px; line-height: 1.5; color: var(--ink); margin-top: 12px; }
+  .im-meta { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 4px; }
+  .im-avatar { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, #B45309, #6B3A00); color: #fff; font-size: 10px; font-weight: 600; margin-right: 8px; vertical-align: middle; }
+  .back-home { margin-top: 22px; }
+
+  /* ---------- Supply chain flow (thumbnail + modal) ---------- */
+  .flow { display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 14px; box-shadow: var(--shadow); margin-bottom: 18px; }
+  .flow-steps { flex: 1; display: flex; align-items: center; gap: 6px; overflow-x: auto; }
+  .flow-step { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+  .flow-step:hover { background: var(--surface-2); }
+  .flow-label { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  .flow-badge { min-width: 22px; height: 22px; padding: 0 7px; border-radius: 999px; font-family: var(--mono); font-size: 12px; font-weight: 700; display: grid; place-items: center; }
+  .flow-badge.b-red { background: var(--risk); color: #fff; }
+  .flow-badge.b-amber { background: var(--warn); color: #fff; }
+  .flow-badge.b-gray { background: var(--ink-3); color: #fff; }
+  .flow-badge.b-none { background: var(--surface-2); color: var(--ink-3); }
+  .flow-arrow { color: var(--line-strong); font-size: 13px; flex: 0 0 auto; }
+  .flow-expand { flex: 0 0 auto; background: none; border: none; cursor: pointer; font-size: 15px; color: var(--ink-3); padding: 4px 8px; border-radius: 6px; }
+  .flow-expand:hover { background: var(--surface-2); color: var(--ink); }
+
+  .flow-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; }
+  .flow-modal[hidden] { display: none; }
+  .flow-modal-backdrop { position: absolute; inset: 0; background: rgba(15,20,25,.5); }
+  .flow-modal-card { position: relative; width: min(880px, calc(100vw - 48px)); max-height: 86vh; overflow: auto; background: var(--surface); border-radius: 16px; box-shadow: 0 24px 60px rgba(15,20,25,.3); padding: 24px 28px; }
+  .flow-modal-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .flow-modal-title { font-size: 17px; font-weight: 700; }
+  .flow-modal-close { margin-left: auto; background: none; border: none; cursor: pointer; font-size: 18px; color: var(--ink-3); padding: 4px 8px; border-radius: 6px; }
+  .flow-modal-close:hover { background: var(--surface-2); color: var(--ink); }
+  .flow-modal-steps { display: flex; align-items: center; gap: 10px; padding: 16px; border: 1px solid var(--line); border-radius: var(--r); background: var(--paper); overflow-x: auto; }
+  .flow-modal-steps .flow-step { padding: 10px 16px; }
+  .flow-modal-steps .flow-label { font-size: 14px; }
+  .flow-modal-steps .flow-badge { min-width: 26px; height: 26px; font-size: 13px; }
+  .flow-modal-steps .flow-step.active { background: var(--accent-soft); outline: 2px solid var(--accent); }
+  .flow-detail-head { font-size: 14px; font-weight: 700; margin: 18px 0 10px; }
+  .flow-issue { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); cursor: pointer; border-radius: 6px; }
+  .flow-issue:hover { background: var(--surface-2); }
+  .flow-issue:last-child { border-bottom: 0; }
+  .flow-issue-cta { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--accent-strong); white-space: nowrap; }
+  .flow-detail-empty { font-size: 13.5px; color: var(--ink-3); padding: 8px 0; }
+
+  /* ---------- Today: task context ---------- */
+  .taskhead {
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--risk);
+    border-radius: var(--r); padding: 18px 20px; box-shadow: var(--shadow);
+    display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap;
+  }
+  .taskhead .t { font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
+  .taskhead .meta { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 8px; font-size: 12.5px; color: var(--ink-2); }
+  .taskhead .meta span { display: flex; gap: 6px; align-items: center; }
+  .taskhead .meta .k { color: var(--ink-3); }
+  .taskhead .meta .v { font-family: var(--mono); color: var(--ink); font-weight: 600; }
+
+  .sources { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 10px; }
+  .src-tag {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-2);
+    border: 1px solid var(--line); background: var(--surface); padding: 4px 10px; border-radius: 999px;
+    opacity: 0; transform: translateY(8px); transition: opacity .4s ease, transform .4s ease;
+  }
+  .src-tag.show { opacity: 1; transform: none; }
+  .src-tag i { font-style: normal; color: var(--accent); margin-right: 5px; }
+  /* Email extraction (reading emails → structured fields) */
+  .email-extract { margin: 0 0 14px; padding: 10px 14px; background: var(--accent-soft); border: 1px solid #CBE6EC; border-radius: var(--r-sm); display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; font-size: 12.5px; color: var(--ink-2); }
+  .email-extract .ee-label { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent-strong); margin-right: 2px; }
+  .email-extract b { color: var(--ink); font-weight: 600; }
+  /* Daily report draft (P1) */
+  .report-draft { margin-top: 22px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); overflow: hidden; box-shadow: var(--shadow); }
+  .report-draft summary { list-style: none; cursor: pointer; padding: 13px 16px; font-size: 13.5px; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .report-draft summary::-webkit-details-marker { display: none; }
+  .report-draft .rd-tag { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--ink-3); background: var(--surface-2); border: 1px solid var(--line); padding: 2px 7px; border-radius: 999px; }
+  .report-draft .rd-body { padding: 2px 16px 14px; border-top: 1px solid var(--line); }
+  .report-draft .rd-sec { font-size: 13px; color: var(--ink-2); line-height: 1.5; margin: 10px 0 0; }
+  .report-draft .rd-sec b { color: var(--ink); font-weight: 600; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; box-shadow: var(--shadow); }
+  .panel h3 { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); font-weight: 600; margin: 0 0 12px; }
+  .impact-num { font-family: var(--mono); font-size: 30px; font-weight: 700; letter-spacing: -.02em; }
+  .impact-num .unit { font-size: 15px; color: var(--ink-3); font-weight: 600; }
+  .spark { margin: 10px 0 2px; }
+  .spark-label { font-size: 11px; color: var(--ink-3); font-family: var(--mono); }
+
+  .cause { display: flex; flex-direction: column; gap: 12px; }
+  .cause-item { border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 14px; }
+  .cause-item .tag { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .04em; padding: 2px 7px; border-radius: 5px; }
+  .cause-item.fact .tag { background: var(--ok-soft); color: var(--ok); }
+  .cause-item.hyp .tag { background: var(--warn-soft); color: var(--warn); }
+  .cause-item p { margin: 8px 0 0; font-size: 13.5px; color: var(--ink); }
+  .cause-item .conf { margin-top: 8px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+
+  .evidence { margin-top: 16px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); overflow: hidden; }
+  .evidence summary { list-style: none; cursor: pointer; padding: 12px 16px; font-size: 13px; font-weight: 600; color: var(--accent-strong); display: flex; align-items: center; gap: 8px; }
+  .evidence summary::-webkit-details-marker { display: none; }
+  .evidence .evbody { padding: 4px 16px 16px; font-family: var(--mono); font-size: 12px; }
+  .evidence .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--line); color: var(--ink-2); }
+  .evidence .row:last-child { border-bottom: 0; }
+  .evidence .row .v { color: var(--ink); }
+
+  /* ---------- Today: approve ---------- */
+  .actions { display: flex; flex-direction: column; gap: 10px; }
+  .action { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 13px 16px; box-shadow: var(--shadow); }
+  .action .idx { flex: 0 0 auto; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-strong); font-weight: 700; font-size: 13px; display: grid; place-items: center; font-family: var(--mono); }
+  .action .a-body { flex: 1; }
+  .action .a-title { font-size: 14px; font-weight: 600; }
+  .action .a-meta { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+  .action .a-meta b { font-family: var(--mono); color: var(--ink-2); font-weight: 600; }
+
+  .draft { margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+  .draft-head { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 10px; }
+  .draft-head .lab { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); }
+  .draft-head .st { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--warn); background: var(--warn-soft); padding: 2px 8px; border-radius: 999px; }
+  .draft-head .st.ok { color: var(--ok); background: var(--ok-soft); }
+  .draft-body { padding: 16px 18px; font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
+  .draft-body .field { margin-bottom: 8px; }
+  .draft-body .field .k { font-family: var(--mono); font-size: 11px; color: var(--ink-3); display: inline-block; width: 70px; }
+  .draft-body textarea { width: 100%; border: 1px solid var(--line); border-radius: var(--r-sm); font-family: var(--sans); font-size: 13.5px; line-height: 1.6; color: var(--ink); padding: 12px; resize: vertical; min-height: 130px; background: var(--surface); }
+  .draft-body textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  .gate { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
+  .btn { font-family: var(--sans); font-weight: 600; font-size: 14px; padding: 11px 18px; border-radius: 10px; cursor: pointer; border: 1px solid transparent; transition: all .15s ease; }
+  .btn-primary { background: var(--accent-strong); color: #fff; }
+  .btn-primary:hover { background: #094B5C; }
+  .btn-ghost { background: var(--surface); border-color: var(--line-strong); color: var(--ink-2); }
+  .btn-ghost:hover { border-color: var(--ink-3); color: var(--ink); }
+  .btn-danger { background: var(--surface); border-color: var(--risk); color: var(--risk); }
+  .gate .hint { font-size: 12.5px; color: var(--ink-3); width: 100%; margin-top: 2px; }
+
+  .ladder { display: flex; gap: 6px; margin-top: 20px; flex-wrap: wrap; align-items: center; }
+  .ladder .lab { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); margin-right: 6px; }
+  .rung { font-family: var(--mono); font-size: 11px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-3); background: var(--surface); }
+  .rung.cur { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); font-weight: 700; }
+  .rung span { opacity: .6; font-size: 10px; }
+
+  /* ---------- Recommendations (approve) ---------- */
+  .recs { display: flex; flex-direction: column; gap: 10px; }
+  .rec { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+  .rec.rec-p0 { border-color: var(--risk); box-shadow: 0 0 0 1px var(--risk) inset, var(--shadow); }
+  .rec-head { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: none; border: none; cursor: pointer; font-family: var(--sans); text-align: left; }
+  .rec-head:hover { background: var(--surface-2); }
+  .rec-rank { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; background: var(--surface-2); color: var(--ink-3); font-family: var(--mono); font-weight: 700; font-size: 12px; display: grid; place-items: center; }
+  .rec.rec-p0 .rec-rank { background: var(--risk-soft); color: var(--risk); }
+  .rec-title { flex: 1; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+  .rec-chev { color: var(--ink-3); transition: transform .2s ease; font-size: 11px; }
+  .rec.open .rec-chev { transform: rotate(180deg); }
+  .rec-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--line); }
+  .rec.open .rec-body { display: block; }
+  .rec-summary { margin: 12px 0 4px; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+  .rec-summary[contenteditable="true"] { outline: none; background: var(--accent-soft); border-radius: 6px; padding: 6px 8px; margin: 10px 0 4px; }
+  .rec-metas { margin: 10px 0; }
+  .rec-meta { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; font-size: 13px; color: var(--ink-3); border-bottom: 1px dashed var(--line); }
+  .rec-meta:last-child { border-bottom: 0; }
+  .rec-meta b { font-family: var(--mono); color: var(--ink-2); font-weight: 600; }
+  .rec-edit { margin-top: 10px; font-family: var(--sans); font-size: 12.5px; font-weight: 600; color: var(--accent-strong); background: none; border: 1px solid var(--line-strong); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  .rec-edit:hover { border-color: var(--accent); }
+  .rec .draft { margin-top: 12px; box-shadow: none; }
+  .rec .gate { margin-top: 14px; }
+
+  /* ---------- Today: track ---------- */
+  .statusline { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+  .statusline .mono { font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); }
+  .timeline { display: flex; flex-direction: column; margin-top: 8px; }
+  .tl-step { display: flex; gap: 14px; position: relative; padding-bottom: 22px; }
+  .tl-step:last-child { padding-bottom: 0; }
+  .tl-step::before { content: ""; position: absolute; left: 11px; top: 26px; bottom: 0; width: 2px; background: var(--line); }
+  .tl-step:last-child::before { display: none; }
+  .tl-dot { flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%; background: var(--surface); border: 2px solid var(--line-strong); display: grid; place-items: center; z-index: 1; font-size: 11px; }
+  .tl-step.done .tl-dot { background: var(--ok); border-color: var(--ok); color: #fff; }
+  .tl-step.now .tl-dot { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 0 4px var(--accent-soft); }
+  .tl-step.now .tl-label { font-weight: 600; color: var(--ink); }
+  .tl-label { font-size: 14px; color: var(--ink-2); padding-top: 2px; }
+  .tl-time { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-left: auto; padding-top: 4px; }
+
+  .open-actions { margin-top: 4px; }
+  .oa { display: flex; align-items: center; gap: 11px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .oa:last-child { border-bottom: 0; }
+  .oa-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+  .oa-dot.sent { background: var(--ok); }
+  .oa-dot.prog { background: var(--accent); }
+  .oa-dot.done { background: var(--ink-3); }
+  .oa-st { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); }
+
+  .followup { margin-top: 18px; display: flex; gap: 11px; align-items: flex-start; background: var(--accent-soft); border: 1px solid #CBE6EC; border-radius: var(--r); padding: 14px 16px; font-size: 13.5px; color: var(--ink-2); line-height: 1.5; }
+  .followup b { color: var(--ink); }
+
+  /* ---------- Explore: BI dashboard ---------- */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 1000px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .kpi-row { grid-template-columns: 1fr; } }
+  .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; box-shadow: var(--shadow); }
+  .kpi.alert { border-color: var(--risk); box-shadow: 0 0 0 1px var(--risk) inset, var(--shadow); }
+  .kpi-link { font-family: var(--mono); font-size: 11px; color: var(--accent-strong); cursor: pointer; font-weight: 600; }
+  .kpi-link:hover { text-decoration: underline; }
+  .kpi-lab { font-size: 12px; color: var(--ink-3); display: flex; align-items: center; gap: 8px; }
+  .kpi-lab .kpi-link { margin-left: auto; }
+  .kpi-val { font-family: var(--mono); font-size: 26px; font-weight: 700; margin-top: 6px; letter-spacing: -.01em; }
+  .kpi-delta { font-family: var(--mono); font-size: 11.5px; margin-top: 4px; color: var(--ink-3); }
+  .kpi-delta.down { color: var(--warn); }
+  .kpi-delta.risk { color: var(--risk); }
+  .kpi-delta.up { color: var(--ok); }
+
+  .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+  @media (max-width: 760px) { .charts { grid-template-columns: 1fr; } }
+  .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--ink-2); margin-top: 8px; }
+  .chart-legend .lg { display: flex; align-items: center; gap: 5px; }
+  .chart-legend .sw { width: 10px; height: 3px; border-radius: 2px; }
+  .donut-wrap { display: flex; align-items: center; gap: 20px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 9px; font-size: 12.5px; color: var(--ink-2); }
+  .donut-legend .dl { display: flex; align-items: center; gap: 8px; min-width: 130px; }
+  .donut-legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+  .donut-legend .v { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--ink); }
+
+  .hbar { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+  .hbar:last-child { margin-bottom: 0; }
+  .hbar .name { width: 128px; font-size: 12.5px; color: var(--ink-2); }
+  .hbar .track { flex: 1; height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+  .hbar .fill { display: block; height: 100%; border-radius: 999px; }
+  .hbar .val { font-family: var(--mono); font-size: 12px; width: 40px; text-align: right; color: var(--ink-2); }
+
+  .vbars { display: flex; align-items: flex-end; gap: 20px; height: 128px; }
+  .vbar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+  .vbar { width: 100%; max-width: 46px; border-radius: 6px 6px 0 0; }
+  .vbar-val { font-family: var(--mono); font-size: 12px; color: var(--ink-2); }
+  .vbar-label { font-size: 11px; color: var(--ink-3); }
+
+  .progress { height: 10px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin: 6px 0 12px; }
+  .progress .fill { height: 100%; border-radius: 999px; background: var(--accent); }
+  .prog-row { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-2); padding: 5px 0; }
+  .prog-row .v { font-family: var(--mono); color: var(--ink); }
+
+  /* ---------- Ask: chat ---------- */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .chip { font-size: 13px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-2); cursor: pointer; transition: all .15s ease; }
+  .chip:hover { border-color: var(--accent); color: var(--accent-strong); }
+
+  .chat { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+  .msg { display: flex; }
+  .msg.user { justify-content: flex-end; }
+  .msg.ai { justify-content: flex-start; }
+  .bubble { max-width: 74%; padding: 13px 16px; border-radius: 14px; font-size: 14px; line-height: 1.55; }
+  .msg.user .bubble { background: var(--accent-strong); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.ai .bubble { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); border-bottom-left-radius: 4px; color: var(--ink); }
+  .ai-concl b { font-weight: 600; }
+  .ai-chart { width: 100%; max-width: 220px; height: 56px; margin-top: 10px; display: block; }
+  .ai-chart-cap { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-top: 4px; }
+  .ai-evidence { margin-top: 10px; border-top: 1px dashed var(--line); padding-top: 8px; font-size: 12.5px; }
+  .ai-evidence .row { display: flex; justify-content: space-between; gap: 16px; padding: 3px 0; color: var(--ink-2); }
+  .ai-evidence .row .v { font-family: var(--mono); color: var(--ink); }
+  .ai-src { margin-top: 8px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+  .ai-actions { margin-top: 10px; display: flex; gap: 8px; }
+  .mini-btn { font-family: var(--sans); font-size: 12.5px; font-weight: 600; padding: 7px 13px; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-strong); background: var(--accent-soft); cursor: pointer; }
+  .mini-btn:hover { background: var(--accent); color: #fff; }
+
+  .chat-input { display: flex; gap: 10px; }
+  .chat-input input { flex: 1; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 10px; font-family: var(--sans); font-size: 14px; }
+  .chat-input input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .chat-input .btn { flex: 0 0 auto; }
+
+  .footnote { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 36px; border-top: 1px solid var(--line); padding-top: 14px; }
+
+  /* ---------- Messages: ticket system ---------- */
+  .msg-layout { display: flex; height: 100vh; background: var(--surface); }
+  .ticket-list { flex: 0 0 auto; width: 320px; border-right: 1px solid var(--line); background: var(--surface); overflow-y: auto; }
+  .ticket-list-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 10px; font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--line); }
+  .ticket-filters { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .filter { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+  .filter:hover { border-color: var(--ink-3); }
+  .filter.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-strong); font-weight: 700; }
+  .ticket-empty { padding: 20px 16px; font-size: 13px; color: var(--ink-3); text-align: center; }
+  .new-ticket-modal { position: fixed; inset: 0; z-index: 210; display: flex; align-items: center; justify-content: center; }
+  .new-ticket-modal[hidden] { display: none; }
+  .nt-backdrop { position: absolute; inset: 0; background: rgba(15,20,25,.5); }
+  .new-ticket-card { position: relative; width: min(520px, calc(100vw - 48px)); background: var(--surface); border-radius: 16px; box-shadow: 0 24px 60px rgba(15,20,25,.3); padding: 22px 24px; }
+  .new-ticket-card .head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 16px; font-weight: 700; }
+  .new-ticket-card .close { margin-left: auto; background: none; border: none; cursor: pointer; font-size: 18px; color: var(--ink-3); padding: 2px 6px; }
+  .new-ticket-card .close:hover { color: var(--ink); }
+  .new-ticket-card label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-2); margin: 12px 0 4px; }
+  .new-ticket-card input, .new-ticket-card textarea { width: 100%; border: 1px solid var(--line-strong); border-radius: 8px; font-family: var(--sans); font-size: 13.5px; padding: 10px 12px; color: var(--ink); }
+  .new-ticket-card textarea { min-height: 90px; resize: vertical; }
+  .new-ticket-card input:focus, .new-ticket-card textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .new-ticket-card .actions { display: flex; gap: 10px; margin-top: 16px; justify-content: flex-end; }
+  .ticket { width: 100%; display: flex; align-items: flex-start; gap: 11px; padding: 14px 16px; background: none; border: none; border-bottom: 1px solid var(--line); cursor: pointer; text-align: left; font-family: var(--sans); }
+  .ticket:hover { background: var(--surface-2); }
+  .ticket.active { background: var(--accent-soft); }
+  .ticket-avatar { flex: 0 0 auto; width: 32px; height: 32px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 600; display: grid; place-items: center; }
+  .ticket-avatar.internal { background: linear-gradient(135deg, #B45309, #6B3A00); }
+  .ticket-avatar.external { background: linear-gradient(135deg, var(--accent), #123E4B); }
+  .ticket-main { flex: 1; min-width: 0; }
+  .ticket-name { display: flex; align-items: center; gap: 7px; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .ticket-tag { font-family: var(--mono); font-size: 9px; letter-spacing: .04em; padding: 1px 6px; border-radius: 4px; }
+  .ticket-tag.internal { background: var(--warn-soft); color: var(--warn); }
+  .ticket-tag.external { background: var(--accent-soft); color: var(--accent-strong); }
+  .ticket-subject { font-size: 12.5px; color: var(--ink-2); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ticket-right { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .ticket-status { font-family: var(--mono); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .ticket-status.s-awaiting { background: var(--warn-soft); color: var(--warn); }
+  .ticket-status.s-sent { background: var(--accent-soft); color: var(--accent-strong); }
+  .ticket-status.s-resolved { background: var(--ok-soft); color: var(--ok); }
+  .ticket-status.s-draft { background: var(--surface-2); color: var(--ink-3); }
+  .ticket-time { font-family: var(--mono); font-size: 11px; color: var(--ink-3); }
+
+  .thread { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--paper); }
+  .thread-head { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--surface); }
+  .thread-head .name { font-size: 15px; font-weight: 700; }
+  .thread-head .role { font-size: 12px; color: var(--ink-3); }
+  .thread-body { flex: 1; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+  .msg-row { display: flex; }
+  .msg-row.me { justify-content: flex-end; }
+  .msg-bubble { max-width: 72%; padding: 11px 15px; border-radius: 14px; font-size: 13.5px; line-height: 1.55; }
+  .msg-row.them .msg-bubble { background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; color: var(--ink); }
+  .msg-row.me .msg-bubble { background: var(--accent-strong); color: #fff; border-bottom-right-radius: 4px; }
+  .msg-meta { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-top: 4px; }
+  .msg-row.me .msg-meta { text-align: right; }
+  .draft-box { border: 1px dashed var(--accent); border-radius: 14px; border-bottom-right-radius: 4px; background: var(--accent-soft); padding: 12px 15px; max-width: 72%; }
+  .draft-label { font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .05em; color: var(--accent-strong); margin-bottom: 8px; }
+  .draft-text { font-size: 13.5px; line-height: 1.55; color: var(--ink); white-space: pre-wrap; }
+  .draft-text[contenteditable="true"] { outline: none; background: #fff; border-radius: 6px; padding: 6px 8px; }
+  .draft-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .thread-actions { display: flex; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--line); background: var(--surface); }
+  .btn-sm { padding: 7px 13px; font-size: 12.5px; border-radius: 8px; }
+
+  /* ---------- Bottom rail (Today only) ---------- */
+  .rail-wrap {
+    position: fixed; bottom: 0; left: 210px; right: 360px;
+    background: rgba(255,255,255,.86);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-top: 1px solid var(--line);
+    z-index: 60;
+  }
+  .rail { max-width: 1080px; margin: 0 auto; padding: 12px 28px; display: flex; align-items: center; gap: 8px; }
+  .step { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-3); cursor: pointer; padding: 8px 12px; border-radius: 10px; border: 1px solid transparent; white-space: nowrap; font-weight: 500; }
+  .step:hover { background: var(--surface-2); }
+  .step .n { font-family: var(--mono); font-size: 11px; width: 20px; height: 20px; border-radius: 50%; background: var(--surface-2); color: var(--ink-3); display: grid; place-items: center; font-weight: 700; }
+  .step.done .n { background: var(--ok); color: #fff; }
+  .step.active { color: var(--ink); background: var(--surface); border-color: var(--line); font-weight: 600; }
+  .step.active .n { background: var(--accent); color: #fff; }
+  .step.sep { color: var(--line-strong); cursor: default; padding: 8px 2px; }
+  .step.sep:hover { background: transparent; }
+  .rail .spacer { flex: 1; }
+  .nav-btn { font-family: var(--sans); font-weight: 600; font-size: 13px; padding: 8px 16px; border-radius: 9px; border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+  .nav-btn:disabled { opacity: .4; cursor: not-allowed; }
+  .nav-btn.next { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }
+  .nav-btn.next:disabled { background: var(--line-strong); border-color: var(--line-strong); color: #fff; }
+
+  .toast {
+    position: fixed; left: calc(50% - 75px); bottom: 84px; transform: translateX(-50%) translateY(12px);
+    background: var(--ink); color: #fff; padding: 10px 18px; border-radius: 10px;
+    font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
+    z-index: 80; font-weight: 500;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  }
+</style>
+</head>
 <body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NW637LW6"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->  
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
 
-<p id="key1_local">${key1_local}</p>
-<p id="key2_local">${key2_local}</p>
+  <!-- Left sidebar -->
+  <aside class="sidebar">
+    <div class="sb-brand"><span class="dot"></span> My Opsmate</div>
+    <nav class="sb-nav">
+      <button class="sb-item active" data-mode="today">
+        <svg class="ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="3"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2M5.5 5.5l1.4 1.4M13.1 13.1l1.4 1.4M14.5 5.5l-1.4 1.4M6.9 13.1l-1.4 1.4"/></svg>
+        Today
+      </button>
+      <button class="sb-item" data-mode="explore">
+        <svg class="ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="5.5" height="5.5" rx="1.2"/><rect x="11" y="3.5" width="5.5" height="5.5" rx="1.2"/><rect x="3.5" y="11" width="5.5" height="5.5" rx="1.2"/><rect x="11" y="11" width="5.5" height="5.5" rx="1.2"/></svg>
+        Explore
+      </button>
+      <button class="sb-item" data-mode="messages">
+        <svg class="ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="14" height="11" rx="1.5"/><path d="M3.5 6l6.5 4.5L16.5 6"/></svg>
+        Messages
+      </button>
+    </nav>
+    <div class="sb-foot">
+      <div class="persona">
+        <div class="avatar">MZ</div>
+        <div>
+          <div class="who">Mei-Lin Zhao</div>
+          <div class="role">Supply/Demand Planner</div>
+        </div>
+      </div>
+      <div class="delegation">Delegation <b>L2 · Draft</b></div>
+    </div>
+  </aside>
 
+  <div class="main">
+
+    <!-- ============ TODAY MODE ============ -->
+    <div class="mode active" id="mode-today">
+      <div class="stage">
+
+        <!-- Step 1: brief -->
+        <section class="view" id="view-1">
+          <div class="flow">
+            <div class="flow-steps">
+              <div class="flow-step" data-step="demand"><span class="flow-label">Demand</span><span class="flow-badge b-none">0</span></div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" data-step="plan"><span class="flow-label">Plan</span><span class="flow-badge b-none">0</span></div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" data-step="source"><span class="flow-label">Source</span><span class="flow-badge b-red">2</span></div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" data-step="build"><span class="flow-label">Build</span><span class="flow-badge b-amber">1</span></div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" data-step="ship"><span class="flow-label">Ship</span><span class="flow-badge b-gray">1</span></div>
+              <span class="flow-arrow">→</span>
+              <div class="flow-step" data-step="deliver"><span class="flow-label">Deliver</span><span class="flow-badge b-none">0</span></div>
+            </div>
+            <button class="flow-expand" type="button" aria-label="Enlarge flow">⤢</button>
+          </div>
+
+          <div class="dateline" style="font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.03em;margin-bottom:14px;">08:32 AM</div>
+
+          <h1>Good morning, Mei-Lin.</h1>
+          <p class="lead">10 signals came in overnight. <b>3</b> need your attention — I've set aside the other <b>7</b>.</p>
+
+          <div class="priority-list">
+            <div class="pcard hero" data-goto="2">
+              <div class="sev"><span class="badge p0">P0 · HIGH</span></div>
+              <div class="body">
+                <div class="title">iPhone 18 Pro — OLED panel supply risk</div>
+                <div class="desc">Samsung Display yield down · Weeks 42–44 · <span class="num">~180K</span> units at risk</div>
+              </div>
+              <div class="cta">Open →</div>
+            </div>
+            <div class="pcard" data-goto="2">
+              <div class="sev"><span class="badge p1">P1 · MEDIUM</span></div>
+              <div class="body">
+                <div class="title">iPhone Duo — Sony image sensor allocation</div>
+                <div class="desc">Launch ramp exposure · mid risk</div>
+              </div>
+              <div class="cta">Open →</div>
+            </div>
+            <div class="pcard" data-goto="2">
+              <div class="sev"><span class="badge p1">P1 · WATCH</span></div>
+              <div class="body">
+                <div class="title">Tata Hosur — titanium casing ramp</div>
+                <div class="desc">India ramp behind plan · monitoring</div>
+              </div>
+              <div class="cta">Open →</div>
+            </div>
+          </div>
+
+          <div class="setaside">
+            <div class="setaside-head"><span class="n">Set aside · 7 signals</span><span class="note">lower confidence — no action needed</span></div>
+            <div class="sa-grid">
+              <div class="sa-card"><span class="sa-src">LOGISTICS</span><span class="sa-t">In-transit delay <span class="sa-sub">· within tolerance</span></span></div>
+              <div class="sa-card"><span class="sa-src">EMAIL</span><span class="sa-t">Escalation <span class="sa-sub">· already resolved</span></span></div>
+              <div class="sa-card"><span class="sa-src">PO</span><span class="sa-t">Date change <span class="sa-sub">· minor</span></span></div>
+              <div class="sa-card"><span class="sa-src">CARRIER</span><span class="sa-t">Customs exception <span class="sa-sub">· pending</span></span></div>
+              <div class="sa-card"><span class="sa-src">QUALITY</span><span class="sa-t">Incoming hold <span class="sa-sub">· minor</span></span></div>
+              <div class="sa-card"><span class="sa-src">FORECAST</span><span class="sa-t">Wk 43 variance <span class="sa-sub">· noise</span></span></div>
+              <div class="sa-card"><span class="sa-src">SLA</span><span class="sa-t">Warning <span class="sa-sub">· negligible</span></span></div>
+            </div>
+          </div>
+
+          <details class="report-draft">
+            <summary>📄 Daily report draft <span class="rd-tag">P1 · AUTO-GENERATED</span></summary>
+            <div class="rd-body">
+              <p class="rd-sec"><b>Progress</b> — 2 of 3 priority issues in motion; BOE allocation request drafted.</p>
+              <p class="rd-sec"><b>Risks</b> — Samsung OLED yield (Wk 42–44, ~180K units); titanium casing ramp lag.</p>
+              <p class="rd-sec"><b>Actions</b> — Approve BOE allocation · reply Sarah Chen · expedite in-transit.</p>
+            </div>
+          </details>
+        </section>
+
+        <!-- Step 2: task context -->
+        <section class="view" id="view-2">
+          <p class="lead" style="margin-bottom:16px;">I've pulled together the full picture so you don't have to.</p>
+          <div class="taskhead">
+            <div style="flex:1;min-width:220px;">
+              <div class="t">iPhone 18 Pro — OLED panel supply risk</div>
+              <div class="meta">
+                <span><span class="k">Owner</span><span class="v">Mei-Lin Zhao</span></span>
+                <span><span class="k">PO</span><span class="v">#4502-8891</span></span>
+                <span><span class="k">Part</span><span class="v">OLED 6.1" LTPO</span></span>
+                <span><span class="k">SLA</span><span class="v">48h</span></span>
+              </div>
+            </div>
+            <div class="sev"><span class="badge p0">P0 · HIGH</span></div>
+          </div>
+
+          <div class="sources">
+            <span class="src-tag"><i>▣</i>SAP</span>
+            <span class="src-tag"><i>▣</i>MRP</span>
+            <span class="src-tag"><i>▣</i>Supplier Portal</span>
+            <span class="src-tag"><i>▣</i>Logistics</span>
+            <span class="src-tag"><i>▣</i>Email</span>
+          </div>
+
+          <div class="email-extract">
+            <span class="ee-label">📧 Extracted from email</span>
+            <span><b>Commitment</b> supplier to share recovery plan by EOD</span>
+            <span><b>Date</b> 9/22</span>
+            <span><b>Action</b> confirm BOE terms</span>
+          </div>
+
+          <div class="grid2">
+            <div class="panel">
+              <h3>Business impact</h3>
+              <div class="impact-num">~180K <span class="unit">units at risk</span></div>
+              <svg class="spark" width="100%" height="44" viewBox="0 0 300 44" preserveAspectRatio="none">
+                <polyline points="0,16 40,14 80,18 120,15 160,20 200,17 240,26 300,34" fill="none" stroke="#B42318" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="0" y1="30" x2="300" y2="30" stroke="#C9D0D8" stroke-width="1" stroke-dasharray="4 4"/>
+                <text x="0" y="40" font-family="monospace" font-size="9" fill="#7A8490">Wk 40</text>
+                <text x="274" y="40" font-family="monospace" font-size="9" fill="#7A8490">Wk 44</text>
+              </svg>
+              <div class="spark-label">Weekly yield trend vs. safety threshold</div>
+            </div>
+
+            <div class="panel">
+              <h3>Root cause</h3>
+              <div class="cause">
+                <div class="cause-item fact">
+                  <span class="tag">FACT · CONFIRMED</span>
+                  <p>Yield down <b>12%</b> vs. baseline in Week 41.</p>
+                  <div class="conf">confidence · high · source: Supplier Portal</div>
+                </div>
+                <div class="cause-item hyp">
+                  <span class="tag">HYPOTHESIS · OPEN</span>
+                  <p>New line equipment outage — awaiting supplier confirmation.</p>
+                  <div class="conf">confidence · medium · source: Email</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <details class="evidence">
+            <summary>▾ View evidence &amp; source lineage</summary>
+            <div class="evbody">
+              <div class="row"><span>Yield report — Wk 41</span><span class="v">88.4% (−12.0%)</span></div>
+              <div class="row"><span>Safety stock — OLED LTPO</span><span class="v">6 days (−4)</span></div>
+              <div class="row"><span>Build plan — Wk 42–44</span><span class="v">420K units</span></div>
+              <div class="row"><span>Dual source available</span><span class="v">LG Display · BOE</span></div>
+              <div class="row"><span>Last refresh</span><span class="v">08:29 AM</span></div>
+            </div>
+          </details>
+        </section>
+
+        <!-- Step 3: approve -->
+        <section class="view" id="view-3">
+          <h1>Recommended next moves</h1>
+          <p class="lead">Ranked by impact and confidence — expand for details, adjust to your call.</p>
+
+          <div class="recs">
+            <div class="rec rec-p0 open">
+              <button class="rec-head" type="button">
+                <span class="rec-rank">1</span>
+                <span class="badge p0">P0 · HIGH</span>
+                <span class="rec-title">Request incremental allocation from BOE</span>
+                <span class="rec-chev">▾</span>
+              </button>
+              <div class="rec-body">
+                <p class="rec-summary">Covers ~60% of the shortfall within lead time — lowest risk, fastest impact.</p>
+                <div class="rec-metas">
+                  <div class="rec-meta"><span>Expected impact</span><b>~110K units</b></div>
+                  <div class="rec-meta"><span>Owner</span><b>Mei-Lin</b></div>
+                  <div class="rec-meta"><span>Escalate</span><b>Global GSM</b></div>
+                  <div class="rec-meta"><span>Effort</span><b>Low</b></div>
+                </div>
+                <button class="rec-edit" type="button">Edit</button>
+              </div>
+            </div>
+
+            <div class="rec rec-p1">
+              <button class="rec-head" type="button">
+                <span class="rec-rank">2</span>
+                <span class="badge p1">P1 · MEDIUM</span>
+                <span class="rec-title">Send supplier communication</span>
+                <span class="rec-chev">▾</span>
+              </button>
+              <div class="rec-body">
+                <p class="rec-summary">Email draft to Samsung Display — ready for your review.</p>
+                <div class="draft">
+                  <div class="draft-head">
+                    <span class="lab">Draft communication</span>
+                    <span class="st" id="draft-status">Awaiting your review</span>
+                  </div>
+                  <div class="draft-body">
+                    <div class="field"><span class="k">To</span> <span class="v">Samsung Display — account team</span></div>
+                    <div class="field"><span class="k">Subject</span> <span class="v">Wk 42–44 OLED panel supply — request for yield recovery plan</span></div>
+                    <textarea id="draft-text">Hi team,
+
+We're seeing a 12% yield decline in Week 41 on the OLED LTPO line for iPhone 18 Pro, which puts roughly 180K units of the Week 42–44 build plan at risk. Could you share a recovery plan and confirmed output commitment by end of day?
+
+We've also engaged BOE as a dual source to cover the gap while you recover. Happy to align on a joint review tomorrow morning.
+
+Thanks,
+Mei-Lin</textarea>
+                  </div>
+                </div>
+                <div class="gate">
+                  <button class="btn btn-primary" id="approve-btn">Approve &amp; send</button>
+                  <button class="btn btn-ghost" id="edit-btn">Edit draft</button>
+                  <button class="btn btn-danger" id="reject-btn">Reject</button>
+                  <div class="hint">Nothing is sent without your approval.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rec rec-p1">
+              <button class="rec-head" type="button">
+                <span class="rec-rank">3</span>
+                <span class="badge p1">P1 · MEDIUM</span>
+                <span class="rec-title">Reply to Sarah Chen — align on BOE</span>
+                <span class="rec-chev">▾</span>
+              </button>
+              <div class="rec-body">
+                <p class="rec-summary">Confirm the allocation request so Sarah can engage BOE's account team.</p>
+                <div class="draft">
+                  <div class="draft-head">
+                    <span class="lab">Internal message</span>
+                    <span class="st" id="im-status">Awaiting your review</span>
+                  </div>
+                  <div class="draft-body">
+                    <div class="field"><span class="k">To</span> <span class="im-avatar">SC</span> <span class="v">Sarah Chen · Global GSM Lead</span></div>
+                    <textarea id="im-text">Hi Sarah — yes, aligned. Go ahead and request ~60% from BOE; I've flagged the Week 42–44 gap (~180K units). Keep me posted on their response.</textarea>
+                  </div>
+                </div>
+                <div class="gate">
+                  <button class="btn btn-primary" id="im-send-btn">Send</button>
+                  <button class="btn btn-ghost" id="im-edit-btn">Edit</button>
+                  <button class="btn btn-danger" id="im-reject-btn">Reject</button>
+                  <div class="hint">Sent through internal messaging — you stay in control.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rec rec-p1">
+              <button class="rec-head" type="button">
+                <span class="rec-rank">4</span>
+                <span class="badge p1">P1 · MEDIUM</span>
+                <span class="rec-title">Expedite in-transit shipments</span>
+                <span class="rec-chev">▾</span>
+              </button>
+              <div class="rec-body">
+                <p class="rec-summary">Pulls forward ~15K units into Week 42 to narrow the gap.</p>
+                <div class="rec-metas">
+                  <div class="rec-meta"><span>Expected impact</span><b>~15K units</b></div>
+                  <div class="rec-meta"><span>Owner</span><b>Logistics</b></div>
+                  <div class="rec-meta"><span>Escalate</span><b>Regional lead</b></div>
+                  <div class="rec-meta"><span>Effort</span><b>Medium</b></div>
+                </div>
+                <button class="rec-edit" type="button">Edit</button>
+              </div>
+            </div>
+
+            <div class="rec rec-p2">
+              <button class="rec-head" type="button">
+                <span class="rec-rank">5</span>
+                <span class="badge p2">P2 · LOW</span>
+                <span class="rec-title">Reschedule low-priority SKUs</span>
+                <span class="rec-chev">▾</span>
+              </button>
+              <div class="rec-body">
+                <p class="rec-summary">Frees capacity to protect Week 42 without new supply.</p>
+                <div class="rec-metas">
+                  <div class="rec-meta"><span>Expected impact</span><b>Protects Wk 42</b></div>
+                  <div class="rec-meta"><span>Owner</span><b>Mei-Lin</b></div>
+                  <div class="rec-meta"><span>Escalate</span><b>—</b></div>
+                  <div class="rec-meta"><span>Effort</span><b>Medium</b></div>
+                </div>
+                <button class="rec-edit" type="button">Edit</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ladder">
+            <span class="lab">Delegation</span>
+            <span class="rung">L0 <span>Understand</span></span>
+            <span class="rung">L1 <span>Recommend</span></span>
+            <span class="rung cur">L2 <span>Draft</span></span>
+            <span class="rung">L3 <span>Approve&amp;execute</span></span>
+            <span class="rung">L4 <span>Autonomy</span></span>
+          </div>
+        </section>
+
+        <!-- Step 4: track -->
+        <section class="view" id="view-4">
+          <h1>OLED panel supply risk</h1>
+          <div class="statusline">
+            <span class="badge resolve">RESOLVING</span>
+            <span class="mono">12h elapsed · SLA 48h</span>
+          </div>
+
+          <div class="timeline">
+            <div class="tl-step done"><div class="tl-dot">✓</div><div class="tl-label">Exception detected &amp; grouped</div><div class="tl-time">08:30</div></div>
+            <div class="tl-step done"><div class="tl-dot">✓</div><div class="tl-label">Context assembled from 5 systems</div><div class="tl-time">08:32</div></div>
+            <div class="tl-step done"><div class="tl-dot">✓</div><div class="tl-label">Actions approved</div><div class="tl-time">08:41</div></div>
+            <div class="tl-step now"><div class="tl-dot">●</div><div class="tl-label">Supplier engaged — awaiting yield plan</div><div class="tl-time">now</div></div>
+            <div class="tl-step"><div class="tl-dot"></div><div class="tl-label">Resolving · follow-up scheduled</div><div class="tl-time">SLA 48h</div></div>
+          </div>
+
+          <div class="panel" style="margin-top:18px;">
+            <h3>Your actions</h3>
+            <div class="open-actions">
+              <div class="oa"><span class="oa-dot sent"></span> Request BOE allocation <span class="oa-st">sent</span></div>
+              <div class="oa"><span class="oa-dot prog"></span> Expedite in-transit shipments <span class="oa-st">in progress</span></div>
+              <div class="oa"><span class="oa-dot done"></span> Reschedule low-priority SKUs <span class="oa-st">done</span></div>
+            </div>
+          </div>
+
+          <div class="followup">
+            <span>⏱</span>
+            <div>Next follow-up: <b>tomorrow 09:00</b> — supplier yield recovery plan is due end of day.</div>
+          </div>
+
+          <div class="back-home">
+            <button class="btn btn-primary" id="back-home-btn">← Back to today</button>
+          </div>
+
+          <p class="footnote">Illustrative data — not real operational data. My Opsmate · v1.0</p>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ============ EXPLORE MODE ============ -->
+    <div class="mode" id="mode-explore">
+      <div class="stage">
+        <h1>Overview</h1>
+        <p class="lead">Your scope at a glance — iPhone 18, display &amp; camera modules.</p>
+
+        <div class="kpi-row">
+          <div class="kpi alert">
+            <div class="kpi-lab">Open exceptions <span class="kpi-link" data-goto="2">Open task →</span></div>
+            <div class="kpi-val">3</div>
+            <div class="kpi-delta risk">+1 this week</div>
+          </div>
+          <div class="kpi alert">
+            <div class="kpi-lab">At-risk units</div>
+            <div class="kpi-val">180K</div>
+            <div class="kpi-delta risk">Wk 42–44</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-lab">On-time delivery</div>
+            <div class="kpi-val">96.2%</div>
+            <div class="kpi-delta down">−0.8 pt</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-lab">Supplier on-time</div>
+            <div class="kpi-val">91.4%</div>
+            <div class="kpi-delta down">−2.1 pt</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-lab">Inventory coverage</div>
+            <div class="kpi-val">6.1d</div>
+            <div class="kpi-delta down">−0.9d</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-lab">Weeks of supply</div>
+            <div class="kpi-val">5.2</div>
+            <div class="kpi-delta down">−0.4</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-lab">Fill rate</div>
+            <div class="kpi-val">94.8%</div>
+            <div class="kpi-delta up">+0.3 pt</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-lab">In-transit shipments</div>
+            <div class="kpi-val">27</div>
+            <div class="kpi-delta up">+4</div>
+          </div>
+        </div>
+
+        <div class="charts">
+          <div class="panel">
+            <h3>Inventory coverage · key components</h3>
+            <svg width="100%" height="130" viewBox="0 0 300 130" preserveAspectRatio="none">
+              <line x1="0" y1="112" x2="300" y2="112" stroke="#C9D0D8" stroke-width="1" stroke-dasharray="4 4"/>
+              <polyline points="8,42 58,50 108,60 158,74 208,90 258,106 292,116" fill="none" stroke="#B42318" stroke-width="2" stroke-linecap="round"/>
+              <polyline points="8,52 58,55 108,58 158,62 208,66 258,70 292,74" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round"/>
+              <polyline points="8,70 58,68 108,74 158,71 208,78 258,74 292,80" fill="none" stroke="#0E7490" stroke-width="2" stroke-linecap="round"/>
+              <polyline points="8,92 58,94 108,98 158,102 208,106 258,109 292,112" fill="none" stroke="#7A8490" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div class="chart-legend">
+              <span class="lg"><span class="sw" style="background:#B42318"></span> OLED</span>
+              <span class="lg"><span class="sw" style="background:#B45309"></span> Camera module</span>
+              <span class="lg"><span class="sw" style="background:#0E7490"></span> Image sensor</span>
+              <span class="lg"><span class="sw" style="background:#7A8490"></span> Titanium</span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Shipments · forecast vs actual</h3>
+            <svg width="100%" height="130" viewBox="0 0 300 130" preserveAspectRatio="none">
+              <polyline points="8,90 80,80 152,70 224,60 292,50" fill="none" stroke="#C9D0D8" stroke-width="2" stroke-dasharray="5 5"/>
+              <polyline points="8,96 80,78 152,74 224,52 292,62" fill="none" stroke="#0E7490" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div class="chart-legend">
+              <span class="lg"><span class="sw" style="background:#C9D0D8"></span> Forecast</span>
+              <span class="lg"><span class="sw" style="background:#0E7490"></span> Actual</span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Supplier on-time %</h3>
+            <div class="hbar"><span class="name">Samsung Display</span><span class="track"><span class="fill" style="width:88%;background:#B45309"></span></span><span class="val">88%</span></div>
+            <div class="hbar"><span class="name">LG Innotek</span><span class="track"><span class="fill" style="width:90%;background:#0E7490"></span></span><span class="val">90%</span></div>
+            <div class="hbar"><span class="name">LG Display</span><span class="track"><span class="fill" style="width:91%;background:#0E7490"></span></span><span class="val">91%</span></div>
+            <div class="hbar"><span class="name">Largan</span><span class="track"><span class="fill" style="width:93%;background:#0E7490"></span></span><span class="val">93%</span></div>
+            <div class="hbar"><span class="name">BOE</span><span class="track"><span class="fill" style="width:94%;background:#0E7490"></span></span><span class="val">94%</span></div>
+            <div class="hbar"><span class="name">Sony</span><span class="track"><span class="fill" style="width:96%;background:#18794E"></span></span><span class="val">96%</span></div>
+          </div>
+
+          <div class="panel">
+            <h3>Exceptions by type</h3>
+            <div class="vbars">
+              <div class="vbar-col"><span class="vbar-val">2</span><div class="vbar" style="height:100%;background:#B42318"></div><span class="vbar-label">Component</span></div>
+              <div class="vbar-col"><span class="vbar-val">1</span><div class="vbar" style="height:50%;background:#B45309"></div><span class="vbar-label">Capacity</span></div>
+              <div class="vbar-col"><span class="vbar-val">1</span><div class="vbar" style="height:50%;background:#0E7490"></div><span class="vbar-label">Logistics</span></div>
+              <div class="vbar-col"><span class="vbar-val">1</span><div class="vbar" style="height:50%;background:#7A8490"></div><span class="vbar-label">Quality</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Supply by region</h3>
+            <div class="donut-wrap">
+              <svg viewBox="0 0 120 120" width="120" height="120">
+                <g transform="rotate(-90 60 60)">
+                  <circle cx="60" cy="60" r="46" fill="none" stroke="#0E7490" stroke-width="18" stroke-dasharray="196.5 289" stroke-dashoffset="0"/>
+                  <circle cx="60" cy="60" r="46" fill="none" stroke="#B45309" stroke-width="18" stroke-dasharray="63.6 289" stroke-dashoffset="-196.5"/>
+                  <circle cx="60" cy="60" r="46" fill="none" stroke="#C9D0D8" stroke-width="18" stroke-dasharray="28.9 289" stroke-dashoffset="-260.1"/>
+                </g>
+                <text x="60" y="57" text-anchor="middle" font-family="monospace" font-size="15" font-weight="700" fill="#0F1419">100%</text>
+                <text x="60" y="71" text-anchor="middle" font-family="monospace" font-size="9" fill="#7A8490">3 regions</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="dl"><span class="sw" style="background:#0E7490"></span> China <span class="v">68%</span></div>
+                <div class="dl"><span class="sw" style="background:#B45309"></span> India <span class="v">22%</span></div>
+                <div class="dl"><span class="sw" style="background:#C9D0D8"></span> Vietnam <span class="v">10%</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h3>Build plan progress</h3>
+            <div class="prog-row"><span>Week 42</span><span class="v">68%</span></div>
+            <div class="progress" style="margin-bottom:14px;"><div class="fill" style="width:68%;background:#B42318"></div></div>
+            <div class="prog-row"><span>Week 43</span><span class="v">41%</span></div>
+            <div class="progress" style="margin-bottom:14px;"><div class="fill" style="width:41%;background:#B45309"></div></div>
+            <div class="prog-row"><span>Week 44</span><span class="v">12%</span></div>
+            <div class="progress"><div class="fill" style="width:12%;background:#0E7490"></div></div>
+            <div class="spark-label" style="margin-top:12px;">Target: 100% by end of each week</div>
+          </div>
+        </div>
+
+        <p class="footnote">Illustrative data — not real operational data. My Opsmate · v1.0</p>
+      </div>
+    </div>
+
+    <!-- ============ MESSAGES MODE ============ -->
+    <div class="mode" id="mode-messages">
+      <div class="msg-layout">
+        <aside class="ticket-list">
+          <div class="ticket-list-head">
+            <span>Inbox</span>
+            <button class="btn btn-primary btn-sm" id="new-ticket-btn" type="button">+ New</button>
+          </div>
+          <div class="ticket-filters">
+            <button class="filter active" data-filter="all">All</button>
+            <button class="filter" data-filter="Awaiting reply">Awaiting</button>
+            <button class="filter" data-filter="Sent">Sent</button>
+            <button class="filter" data-filter="Draft">Draft</button>
+            <button class="filter" data-filter="Resolved">Resolved</button>
+          </div>
+          <div id="ticket-list-body"></div>
+        </aside>
+        <div class="thread" id="thread"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right chat panel (Ask — always visible) -->
+  <aside class="chat-panel">
+    <div class="chat-panel-head">
+      <svg class="ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4h11A1.5 1.5 0 0 1 17 5.5v6a1.5 1.5 0 0 1-1.5 1.5H9l-3.5 3v-3H4.5A1.5 1.5 0 0 1 3 11.5z"/></svg>
+      Ask
+      <button class="chat-min-btn" id="chat-min-btn" type="button" aria-label="Minimize" title="Minimize">—</button>
+    </div>
+    <div class="chat-panel-body">
+      <div class="chips" id="chips-today">
+        <button class="chip" data-qa="0">Suppliers at risk in Wk 42?</button>
+        <button class="chip" data-qa="1">How much can BOE cover?</button>
+        <button class="chip" data-qa="3">Samsung yield trend?</button>
+      </div>
+      <div class="chips" id="chips-explore" style="display:none">
+        <button class="chip" data-qa="2">OLED inventory by week</button>
+        <button class="chip" data-qa="4">Compare supplier on-time</button>
+        <button class="chip" data-qa="5">Supply split by region</button>
+      </div>
+      <div class="chat" id="chat">
+        <div class="msg ai">
+          <div class="bubble">Hi Mei-Lin — ask me about orders, inventory, suppliers, or risks in your scope.</div>
+        </div>
+      </div>
+      <div class="chat-input">
+        <input id="ask-input" type="text" placeholder="Ask about your supply chain…" autocomplete="off" />
+        <button class="btn btn-primary" id="ask-send">Send</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Bottom rail (Today mode only) -->
+  <div class="rail-wrap" id="rail-wrap">
+    <div class="rail" id="rail">
+      <div class="step active" data-step="1"><span class="n">1</span> Today</div>
+      <div class="step sep">·</div>
+      <div class="step" data-step="2"><span class="n">2</span> Task</div>
+      <div class="step sep">·</div>
+      <div class="step" data-step="3"><span class="n">3</span> Approve</div>
+      <div class="step sep">·</div>
+      <div class="step" data-step="4"><span class="n">4</span> Track</div>
+      <div class="spacer"></div>
+      <button class="nav-btn" id="back-btn">← Back</button>
+      <button class="nav-btn next" id="next-btn">Next →</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Supply chain flow modal (enlarged) -->
+  <div class="flow-modal" id="flow-modal" hidden>
+    <div class="flow-modal-backdrop"></div>
+    <div class="flow-modal-card">
+      <div class="flow-modal-head">
+        <span class="flow-modal-title">Supply chain flow</span>
+        <button class="flow-modal-close" id="flow-close" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="flow-modal-steps">
+        <div class="flow-step" data-step="demand"><span class="flow-label">Demand</span><span class="flow-badge b-none">0</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step" data-step="plan"><span class="flow-label">Plan</span><span class="flow-badge b-none">0</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step" data-step="source"><span class="flow-label">Source</span><span class="flow-badge b-red">2</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step" data-step="build"><span class="flow-label">Build</span><span class="flow-badge b-amber">1</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step" data-step="ship"><span class="flow-label">Ship</span><span class="flow-badge b-gray">1</span></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step" data-step="deliver"><span class="flow-label">Deliver</span><span class="flow-badge b-none">0</span></div>
+      </div>
+      <div id="flow-detail"></div>
+    </div>
+  </div>
+
+  <button class="chat-reopen" id="chat-reopen" type="button" aria-label="Open Ask" title="Ask">💬</button>
+
+  <!-- New ticket modal -->
+  <div class="new-ticket-modal" id="new-ticket-modal" hidden>
+    <div class="nt-backdrop"></div>
+    <div class="new-ticket-card">
+      <div class="head">New ticket <button class="close" id="nt-close" type="button" aria-label="Close">✕</button></div>
+      <label for="nt-to">To</label>
+      <input id="nt-to" type="text" placeholder="Name or team" />
+      <label for="nt-subject">Subject</label>
+      <input id="nt-subject" type="text" placeholder="What is this about?" />
+      <label for="nt-msg">Message</label>
+      <textarea id="nt-msg" placeholder="Your message…"></textarea>
+      <div class="actions">
+        <button class="btn btn-ghost" id="nt-cancel" type="button">Cancel</button>
+        <button class="btn btn-primary" id="nt-send" type="button">Send</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+
+  var mode = "today";
+  var step = 1;
+  var TOTAL = 4;
+
+  var views = {};
+  for (var i = 1; i <= TOTAL; i++) views[i] = document.getElementById("view-" + i);
+  var stepEls = document.querySelectorAll(".step[data-step]");
+  var railWrap = document.getElementById("rail-wrap");
+  var nextBtn = document.getElementById("next-btn");
+  var backBtn = document.getElementById("back-btn");
+  var toast = document.getElementById("toast");
+  var toastTimer = null;
+
+  function toastMsg(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2200);
+  }
+
+  function showStep(n) {
+    step = Math.max(1, Math.min(TOTAL, n));
+    for (var k in views) views[k].classList.toggle("active", Number(k) === step);
+    stepEls.forEach(function (el) {
+      var s = Number(el.getAttribute("data-step"));
+      el.classList.toggle("active", s === step);
+      el.classList.toggle("done", s < step);
+    });
+    backBtn.disabled = (step === 1);
+    nextBtn.disabled = (step === TOTAL);
+    replay(views[step]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function showMode(m) {
+    mode = m;
+    document.querySelectorAll(".mode").forEach(function (el) {
+      el.classList.toggle("active", el.id === "mode-" + m);
+    });
+    document.querySelectorAll(".sb-item").forEach(function (el) {
+      el.classList.toggle("active", el.getAttribute("data-mode") === m);
+    });
+    railWrap.style.display = (m === "today") ? "block" : "none";
+    document.getElementById("chips-today").style.display = (m === "today") ? "flex" : "none";
+    document.getElementById("chips-explore").style.display = (m === "explore") ? "flex" : "none";
+    if (m === "today") showStep(step);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function replay(scope) {
+    scope.querySelectorAll(".src-tag").forEach(function (el, idx) {
+      el.classList.remove("show");
+      void el.offsetWidth;
+      el.style.transitionDelay = (idx * 70) + "ms";
+      el.classList.add("show");
+    });
+  }
+
+  // sidebar mode switching
+  document.querySelectorAll(".sb-item").forEach(function (el) {
+    el.addEventListener("click", function () { showMode(el.getAttribute("data-mode")); });
+  });
+
+  // cross-mode: Explore KPI "Open task"
+  document.querySelectorAll(".kpi-link[data-goto]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      showMode("today");
+      showStep(Number(el.getAttribute("data-goto")));
+    });
+  });
+
+  // bottom rail
+  nextBtn.addEventListener("click", function () { if (step < TOTAL) showStep(step + 1); });
+  backBtn.addEventListener("click", function () { if (step > 1) showStep(step - 1); });
+  stepEls.forEach(function (el) {
+    el.addEventListener("click", function () { showStep(Number(el.getAttribute("data-step"))); });
+  });
+
+  // priority cards open the task view
+  document.querySelectorAll(".pcard[data-goto]").forEach(function (card) {
+    card.addEventListener("click", function () { showStep(Number(card.getAttribute("data-goto"))); });
+  });
+
+  // approve gate
+  var approveBtn = document.getElementById("approve-btn");
+  var editBtn = document.getElementById("edit-btn");
+  var rejectBtn = document.getElementById("reject-btn");
+  var draftStatus = document.getElementById("draft-status");
+  var draftText = document.getElementById("draft-text");
+
+  approveBtn.addEventListener("click", function () {
+    draftStatus.textContent = "Approved — queued to send";
+    draftStatus.classList.add("ok");
+    draftText.disabled = true;
+    toastMsg("Approved. Draft queued to send.");
+    setTimeout(function () { showStep(4); }, 900);
+  });
+  editBtn.addEventListener("click", function () {
+    draftText.disabled = false;
+    draftText.focus();
+    draftStatus.textContent = "Editing";
+    draftStatus.classList.remove("ok");
+    toastMsg("Editing draft — changes stay local until you approve.");
+  });
+  rejectBtn.addEventListener("click", function () {
+    draftStatus.textContent = "Rejected";
+    draftStatus.classList.remove("ok");
+    toastMsg("Draft rejected. Nothing was sent.");
+  });
+
+  // recommendation expand / collapse
+  document.querySelectorAll(".rec-head").forEach(function (head) {
+    head.addEventListener("click", function () {
+      head.parentElement.classList.toggle("open");
+    });
+  });
+
+  // recommendation edit (inline adjust)
+  document.querySelectorAll(".rec-edit").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var rec = btn.closest(".rec");
+      var summary = rec.querySelector(".rec-summary");
+      var editing = summary.getAttribute("contenteditable") === "true";
+      summary.setAttribute("contenteditable", editing ? "false" : "true");
+      btn.textContent = editing ? "Edit" : "Done";
+      if (!editing) summary.focus();
+      else toastMsg("Recommendation updated.");
+    });
+  });
+
+  // internal message gate
+  var imSend = document.getElementById("im-send-btn");
+  var imEdit = document.getElementById("im-edit-btn");
+  var imReject = document.getElementById("im-reject-btn");
+  var imStatus = document.getElementById("im-status");
+  var imText = document.getElementById("im-text");
+  imSend.addEventListener("click", function () {
+    imStatus.textContent = "Sent";
+    imStatus.classList.add("ok");
+    imText.disabled = true;
+    toastMsg("Message sent to Sarah Chen.");
+  });
+  imEdit.addEventListener("click", function () {
+    imText.disabled = false;
+    imText.focus();
+    imStatus.textContent = "Editing";
+    imStatus.classList.remove("ok");
+    toastMsg("Editing message — nothing sent yet.");
+  });
+  imReject.addEventListener("click", function () {
+    imStatus.textContent = "Rejected";
+    imStatus.classList.remove("ok");
+    toastMsg("Message rejected. Nothing was sent.");
+  });
+
+  // back to step 1 from track
+  document.getElementById("back-home-btn").addEventListener("click", function () {
+    showStep(1);
+  });
+
+  // supply chain flow (thumbnail + modal)
+  var FLOW = {
+    demand: { label: "Demand", issues: [] },
+    plan: { label: "Plan", issues: [] },
+    source: { label: "Source", issues: [
+      { p: "P0", c: "p0", text: "iPhone 18 Pro — OLED panel supply risk (Samsung Display)" },
+      { p: "P1", c: "p1", text: "iPhone Duo — Sony image sensor allocation" }
+    ]},
+    build: { label: "Build", issues: [
+      { p: "P1", c: "p1", text: "Tata Hosur — titanium casing ramp behind plan" }
+    ]},
+    ship: { label: "Ship", issues: [
+      { p: "LOW", c: "p2", text: "In-transit delay — within tolerance" }
+    ]},
+    deliver: { label: "Deliver", issues: [] }
+  };
+
+  var flowModal = document.getElementById("flow-modal");
+  var flowDetail = document.getElementById("flow-detail");
+
+  function openFlow(key) {
+    flowModal.hidden = false;
+    document.querySelectorAll(".flow-modal-steps .flow-step").forEach(function (s) {
+      s.classList.toggle("active", s.getAttribute("data-step") === key);
+    });
+    var step = FLOW[key];
+    var html = '<div class="flow-detail-head">' + step.label + '</div>';
+    if (!step.issues.length) {
+      html += '<div class="flow-detail-empty">No open issues in this step.</div>';
+    } else {
+      step.issues.forEach(function (iss) {
+        html += '<div class="flow-issue" data-goto="2"><span class="badge ' + iss.c + '">' + iss.p + '</span><span>' + iss.text + '</span><span class="flow-issue-cta">Open task →</span></div>';
+      });
+    }
+    flowDetail.innerHTML = html;
+  }
+
+  document.querySelectorAll(".flow-step[data-step]").forEach(function (el) {
+    el.addEventListener("click", function () { openFlow(el.getAttribute("data-step")); });
+  });
+  document.querySelector(".flow-expand").addEventListener("click", function () { openFlow("source"); });
+  document.getElementById("flow-close").addEventListener("click", function () { flowModal.hidden = true; });
+  document.querySelector(".flow-modal-backdrop").addEventListener("click", function () { flowModal.hidden = true; });
+  flowDetail.addEventListener("click", function (e) {
+    var issue = e.target.closest(".flow-issue");
+    if (!issue) return;
+    flowModal.hidden = true;
+    showStep(2);
+  });
+
+  /* ---------- Messages ticket system ---------- */
+  var TICKETS = [
+    { key: "sarah", name: "Sarah Chen", role: "Global GSM Lead", internal: true, status: "Awaiting reply", subject: "BOE terms sign-off", time: "08:21", linkTask: true,
+      msgs: [
+        { from: "them", text: "Hi Mei-Lin — re: the Samsung OLED shortfall. Are we aligned to request ~60% from BOE? I need your sign-off before I talk to their account team.", time: "08:21" }
+      ],
+      draft: "Hi Sarah — yes, aligned. Go ahead and request ~60% from BOE; I've flagged the Week 42–44 gap (~180K units). Keep me posted on their response." },
+    { key: "samsung", name: "Samsung Display", role: "Account team", internal: false, status: "Sent", subject: "Yield recovery plan", time: "08:41", linkTask: true,
+      msgs: [
+        { from: "me", text: "We're seeing a 12% yield decline in Week 41 on the OLED LTPO line, which puts roughly 180K units of the Week 42–44 build plan at risk. Could you share a recovery plan and confirmed output commitment by end of day?", time: "08:41" }
+      ] },
+    { key: "boe", name: "BOE", role: "Account team", internal: false, status: "Draft", subject: "Incremental allocation", time: "draft", linkTask: true,
+      msgs: [],
+      draft: "Hi BOE — we'd like to request an incremental allocation of ~60% to cover a Samsung OLED shortfall for Week 42–44. Can you confirm available capacity within your 6–8 week lead time?" },
+    { key: "logistics", name: "Logistics team", role: "Regional ops", internal: true, status: "Resolved", subject: "Expedite in-transit", time: "yest.", linkTask: false,
+      msgs: [
+        { from: "me", text: "Can we pull forward the in-transit shipments to Week 42?", time: "yesterday" },
+        { from: "them", text: "Done — ~15K units pulled forward to Week 42.", time: "yesterday" }
+      ] }
+  ];
+
+  var threadEl = document.getElementById("thread");
+  var listBody = document.getElementById("ticket-list-body");
+  var currentTicket = "sarah";
+  var currentFilter = "all";
+  var ticketSeq = 100;
+
+  function initials(name) {
+    return name.split(" ").map(function (w) { return w[0]; }).join("").slice(0, 2).toUpperCase();
+  }
+  function statusClass(s) {
+    return { "Awaiting reply": "s-awaiting", "Sent": "s-sent", "Draft": "s-draft", "Resolved": "s-resolved" }[s] || "s-draft";
+  }
+  function findTicket(key) {
+    for (var i = 0; i < TICKETS.length; i++) if (TICKETS[i].key === key) return TICKETS[i];
+    return null;
+  }
+
+  function renderTicketList() {
+    var html = "";
+    TICKETS.forEach(function (t) {
+      if (currentFilter !== "all" && t.status !== currentFilter) return;
+      html += '<button class="ticket' + (t.key === currentTicket ? ' active' : '') + '" data-ticket="' + t.key + '">' +
+        '<span class="ticket-avatar ' + (t.internal ? 'internal' : 'external') + '">' + initials(t.name) + '</span>' +
+        '<span class="ticket-main">' +
+          '<span class="ticket-name">' + t.name + ' <span class="ticket-tag ' + (t.internal ? 'internal' : 'external') + '">' + (t.internal ? 'INT' : 'EXT') + '</span></span>' +
+          '<span class="ticket-subject">' + t.subject + '</span>' +
+        '</span>' +
+        '<span class="ticket-right">' +
+          '<span class="ticket-status ' + statusClass(t.status) + '">' + t.status + '</span>' +
+          '<span class="ticket-time">' + t.time + '</span>' +
+        '</span>' +
+      '</button>';
+    });
+    if (!html) html = '<div class="ticket-empty">No tickets in this filter.</div>';
+    listBody.innerHTML = html;
+  }
+
+  function renderThread(key) {
+    var t = findTicket(key);
+    if (!t) return;
+    var html = '<div class="thread-head">' +
+      '<span class="ticket-avatar ' + (t.internal ? 'internal' : 'external') + '">' + initials(t.name) + '</span>' +
+      '<div style="flex:1"><div class="name">' + t.name + '</div><div class="role">' + t.role + '</div></div>' +
+      '<span class="ticket-status ' + statusClass(t.status) + '">' + t.status + '</span>' +
+      '</div>';
+    html += '<div class="thread-body">';
+    t.msgs.forEach(function (m) {
+      var cls = (m.from === 'me') ? 'me' : 'them';
+      html += '<div class="msg-row ' + cls + '"><div><div class="msg-bubble">' + esc(m.text) + '</div><div class="msg-meta">' + m.time + '</div></div></div>';
+    });
+    if (t.draft) {
+      html += '<div class="msg-row me"><div class="draft-box">' +
+        '<div class="draft-label">AI DRAFT · NOT SENT</div>' +
+        '<div class="draft-text">' + esc(t.draft) + '</div>' +
+        '<div class="draft-actions">' +
+        '<button class="mini-btn" data-act="send">Send</button>' +
+        '<button class="btn btn-ghost btn-sm" data-act="edit">Edit</button>' +
+        '<button class="btn btn-danger btn-sm" data-act="reject">Reject</button>' +
+        '</div></div></div>';
+    }
+    html += '</div>';
+    html += '<div class="thread-actions">';
+    if (t.linkTask) html += '<button class="btn btn-primary btn-sm" data-act="opentask">Open task →</button>';
+    if (t.status !== 'Resolved') html += '<button class="btn btn-ghost btn-sm" data-act="resolve">Mark resolved</button>';
+    html += '</div>';
+    threadEl.innerHTML = html;
+  }
+
+  listBody.addEventListener("click", function (e) {
+    var ticket = e.target.closest(".ticket");
+    if (!ticket) return;
+    currentTicket = ticket.getAttribute("data-ticket");
+    renderTicketList();
+    renderThread(currentTicket);
+  });
+
+  document.querySelectorAll(".filter").forEach(function (f) {
+    f.addEventListener("click", function () {
+      document.querySelectorAll(".filter").forEach(function (x) { x.classList.remove("active"); });
+      f.classList.add("active");
+      currentFilter = f.getAttribute("data-filter");
+      renderTicketList();
+    });
+  });
+
+  var ntModal = document.getElementById("new-ticket-modal");
+  document.getElementById("new-ticket-btn").addEventListener("click", function () {
+    ntModal.hidden = false;
+    document.getElementById("nt-to").focus();
+  });
+  function closeNewTicket() { ntModal.hidden = true; }
+  document.getElementById("nt-close").addEventListener("click", closeNewTicket);
+  document.getElementById("nt-cancel").addEventListener("click", closeNewTicket);
+  document.querySelector(".new-ticket-modal .nt-backdrop").addEventListener("click", closeNewTicket);
+  document.getElementById("nt-send").addEventListener("click", function () {
+    var to = document.getElementById("nt-to").value.trim();
+    var subject = document.getElementById("nt-subject").value.trim();
+    var msg = document.getElementById("nt-msg").value.trim();
+    if (!to || !subject) { toastMsg("To and Subject are required."); return; }
+    var key = "nt-" + (ticketSeq++);
+    TICKETS.unshift({ key: key, name: to, role: "—", internal: true, status: "Draft", subject: subject, time: "now", linkTask: false, msgs: [], draft: msg });
+    currentTicket = key;
+    currentFilter = "all";
+    document.querySelectorAll(".filter").forEach(function (x) { x.classList.toggle("active", x.getAttribute("data-filter") === "all"); });
+    closeNewTicket();
+    document.getElementById("nt-to").value = "";
+    document.getElementById("nt-subject").value = "";
+    document.getElementById("nt-msg").value = "";
+    renderTicketList();
+    renderThread(currentTicket);
+    toastMsg("Ticket created.");
+  });
+
+  threadEl.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-act]");
+    if (!btn) return;
+    var act = btn.getAttribute("data-act");
+    var t = findTicket(currentTicket);
+    if (act === "opentask") { showMode("today"); showStep(2); }
+    else if (act === "send" && t) {
+      var dt = threadEl.querySelector(".draft-text");
+      var text = dt ? dt.textContent.trim() : t.draft;
+      t.msgs.push({ from: "me", text: text, time: "now" });
+      t.draft = null;
+      t.status = "Sent";
+      t.time = "now";
+      renderThread(currentTicket);
+      renderTicketList();
+      toastMsg("Message sent.");
+    }
+    else if (act === "edit") { var d = threadEl.querySelector(".draft-text"); d.setAttribute("contenteditable", "true"); d.focus(); }
+    else if (act === "resolve" && t) { t.status = "Resolved"; renderThread(currentTicket); renderTicketList(); toastMsg("Marked as resolved."); }
+    else if (act === "reject" && t) { t.draft = null; renderThread(currentTicket); renderTicketList(); toastMsg("Draft rejected."); }
+  });
+
+  renderTicketList();
+  renderThread(currentTicket);
+
+  /* ---------- Ask ---------- */
+  var chat = document.getElementById("chat");
+  var askInput = document.getElementById("ask-input");
+  var askSend = document.getElementById("ask-send");
+
+  var QA = [
+    {
+      keys: ["supplier", "risk", "at risk", "week 42"],
+      q: "Which suppliers are at risk in Week 42?",
+      a: "Two suppliers need attention: <b>Samsung Display</b> (OLED) — ~180K units at risk; <b>Tata Hosur</b> (titanium casing) — ramp behind plan.",
+      evidence: [["Samsung Display · OLED", "~180K units"], ["Tata Hosur · titanium", "ramp behind"]],
+      src: "Source: Supplier Portal + MRP · structured query",
+      action: { label: "Open task", mode: "today", step: 2 }
+    },
+    {
+      keys: ["boe", "cover", "how much"],
+      q: "How much can BOE cover?",
+      a: "BOE can cover <b>~60%</b> of the shortfall within 6–8 week lead time. Current BOE on-time is <b>94%</b> vs Samsung's 88%.",
+      evidence: [["BOE on-time", "94%"], ["Samsung on-time", "88%"], ["BOE lead time", "6–8 wk"]],
+      src: "Source: Supplier Portal · structured query",
+      action: { label: "Compare suppliers", mode: "explore" }
+    },
+    {
+      keys: ["inventory", "stock", "by week"],
+      q: "Show OLED inventory by week",
+      a: "Safety stock is <b>6 days</b>; projected to fall to <b>4 days</b> by Wk 43 if yield doesn't recover.",
+      chart: "spark",
+      evidence: [["Safety stock", "6 days"], ["Projected (Wk 43)", "4 days"]],
+      src: "Source: MRP · structured query"
+    },
+    {
+      keys: ["yield", "samsung", "trend"],
+      q: "What's the yield trend for Samsung Display?",
+      a: "Yield is down <b>12%</b> in Wk 41 vs. baseline (88.4%).",
+      chart: "yield",
+      evidence: [["Yield Wk 41", "88.4%"], ["vs baseline", "−12.0%"]],
+      src: "Source: Supplier Portal · structured query"
+    },
+    {
+      keys: ["on-time", "on time", "compare supplier", "compare"],
+      q: "Compare supplier on-time %",
+      a: "Samsung Display is the outlier at <b>88%</b>. BOE (94%) and Sony (96%) are stronger; Tata lags at 82%.",
+      evidence: [["Samsung Display", "88%"], ["BOE", "94%"], ["Sony", "96%"], ["Tata", "82%"]],
+      src: "Source: Supplier Portal · structured query",
+      action: { label: "Open dashboard", mode: "explore" }
+    },
+    {
+      keys: ["region", "split", "supply split"],
+      q: "What's the supply split by region?",
+      a: "China <b>68%</b>, India <b>22%</b>, Vietnam <b>10%</b> — Vietnam carries module diversification.",
+      evidence: [["China", "68%"], ["India", "22%"], ["Vietnam", "10%"]],
+      src: "Source: ERP · structured query",
+      action: { label: "Open dashboard", mode: "explore" }
+    }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function chartSvg(type) {
+    if (type === "spark") {
+      return '<svg class="ai-chart" viewBox="0 0 200 56" preserveAspectRatio="none">' +
+        '<polyline points="0,20 40,22 80,28 120,34 160,44 200,52" fill="none" stroke="#0E7490" stroke-width="2"/>' +
+        '<line x1="0" y1="14" x2="200" y2="14" stroke="#C9D0D8" stroke-width="1" stroke-dasharray="4 4"/>' +
+        '</svg><div class="ai-chart-cap">OLED inventory · Wk 40–45</div>';
+    }
+    if (type === "yield") {
+      return '<svg class="ai-chart" viewBox="0 0 200 56" preserveAspectRatio="none">' +
+        '<polyline points="0,18 40,16 80,20 120,18 160,24 200,44" fill="none" stroke="#B42318" stroke-width="2"/>' +
+        '</svg><div class="ai-chart-cap">Samsung yield · Wk 36–41</div>';
+    }
+    return "";
+  }
+
+  function appendUser(text) {
+    var m = document.createElement("div");
+    m.className = "msg user";
+    m.innerHTML = '<div class="bubble">' + esc(text) + '</div>';
+    chat.appendChild(m);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function appendAI(html) {
+    var m = document.createElement("div");
+    m.className = "msg ai";
+    m.innerHTML = '<div class="bubble">' + html + '</div>';
+    chat.appendChild(m);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function renderAI(item) {
+    var html = '<div class="ai-concl">' + item.a + '</div>';
+    if (item.chart) html += chartSvg(item.chart);
+    if (item.evidence) {
+      html += '<div class="ai-evidence">' + item.evidence.map(function (r) {
+        return '<div class="row"><span>' + r[0] + '</span><span class="v">' + r[1] + '</span></div>';
+      }).join("") + '</div>';
+    }
+    html += '<div class="ai-src">' + item.src + '</div>';
+    if (item.action) {
+      html += '<div class="ai-actions"><button class="mini-btn" data-mode="' + item.action.mode + '"' +
+        (item.action.step ? ' data-step="' + item.action.step + '"' : "") + '>' + item.action.label + ' →</button></div>';
+    }
+    appendAI(html);
+  }
+
+  function matchQA(text) {
+    var s = text.toLowerCase();
+    for (var i = 0; i < QA.length; i++) {
+      for (var j = 0; j < QA[i].keys.length; j++) {
+        if (s.indexOf(QA[i].keys[j]) >= 0) return i;
+      }
+    }
+    return -1;
+  }
+
+  function renderGeneric() {
+    var html = '<div class="ai-concl">I found no exact match in your current scope. The most relevant item today is the <b>P0 OLED panel supply risk</b> (~180K units).</div>';
+    html += '<div class="ai-src">Source: Today brief · structured query</div>';
+    html += '<div class="ai-actions"><button class="mini-btn" data-mode="today" data-step="2">Open task →</button></div>';
+    appendAI(html);
+  }
+
+  function sendAsk(text) {
+    if (!text) return;
+    appendUser(text);
+    var idx = matchQA(text);
+    if (idx >= 0) renderAI(QA[idx]);
+    else renderGeneric();
+  }
+
+  document.querySelectorAll(".chip[data-qa]").forEach(function (c) {
+    c.addEventListener("click", function () {
+      var item = QA[Number(c.getAttribute("data-qa"))];
+      appendUser(item.q);
+      renderAI(item);
+    });
+  });
+
+  askSend.addEventListener("click", function () {
+    var t = askInput.value.trim();
+    sendAsk(t);
+    askInput.value = "";
+  });
+  askInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      var t = askInput.value.trim();
+      sendAsk(t);
+      askInput.value = "";
+    }
+  });
+
+  // delegate mini-btn clicks inside chat
+  chat.addEventListener("click", function (e) {
+    var b = e.target.closest(".mini-btn");
+    if (!b) return;
+    showMode(b.getAttribute("data-mode"));
+    if (b.getAttribute("data-step")) showStep(Number(b.getAttribute("data-step")));
+  });
+
+  // Ask panel minimize / reopen
+  document.getElementById("chat-min-btn").addEventListener("click", function () {
+    document.querySelector(".chat-panel").classList.add("minimized");
+    document.body.classList.add("chat-min");
+    document.getElementById("chat-reopen").classList.add("show");
+  });
+  document.getElementById("chat-reopen").addEventListener("click", function () {
+    document.querySelector(".chat-panel").classList.remove("minimized");
+    document.body.classList.remove("chat-min");
+    document.getElementById("chat-reopen").classList.remove("show");
+  });
+
+  /* ---------- keyboard ---------- */
+  document.addEventListener("keydown", function (e) {
+    if (e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+    if (e.key === "1") showMode("today");
+    if (e.key === "2") showMode("explore");
+    if (e.key === "3") showMode("messages");
+    if (mode === "today") {
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); if (step < TOTAL) showStep(step + 1); }
+      else if (e.key === "ArrowLeft") { if (step > 1) showStep(step - 1); }
+      else if (e.key === "r" || e.key === "R") { showStep(1); }
+    }
+  });
+
+  showMode("today");
+})();
+</script>
 </body>
 </html>

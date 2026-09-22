@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Supply Chain AI Teammate Platform — Revised Interview Deck</title>
+</head>
+<body>
+
+<h1>Supply Chain Operations AI Teammate Platform</h1>
+<p>Revised text-only deck for interview content proofreading</p>
+<p>24 pages</p>
+
+<hr>
+
+<!-- Slide 1 -->
+
+<section>
+<p>Slide 1</p>
+<h2>Supply Chain Operations AI Teammate Platform</h2>
+<p>From alert-driven operations to task-driven execution</p>
+<p>0-to-1 Product Proposal</p>
+<p>Global Supply Chain Operations</p>
+<p>Presenter: XXX | September 2026</p>
+</section>
+
+<hr>
+
+<!-- Slide 2 -->
+
+<section>
+<p>Slide 2</p>
+<h2>Executive Summary</h2>
+
+<p>Core thesis</p>
+<p>Existing AI can already summarize information, surface anomalies, and provide suggestions. The next opportunity is to organize AI around the user's work — understanding ownership, prioritizing tasks, recommending actions, and helping close the loop.</p>
+
+<p>Product strategy</p>
+<ol>
+<li>Start narrow: one persona, one workflow, and a small set of high-quality data domains.</li>
+<li>Use the Supply/Demand Planner as the initial wedge, focused on operational exception resolution.</li>
+<li>Use a personalized daily brief as the entry point, while making exception resolution the core value engine.</li>
+<li>Build reusable platform primitives for context, tasks, actions, feedback, and governance.</li>
+<li>Increase AI delegation only as quality and user trust are demonstrated.</li>
+</ol>
+
+<p>MVP outcome</p>
+<p>Prove that an AI teammate can materially reduce the coordination work surrounding operational decisions while keeping humans in control of consequential actions.</p>
+</section>
+
+<hr>
+
+<!-- Slide 3 -->
+
+<section>
+<p>Slide 3</p>
+<h2>Where the Real Problem Is</h2>
+
+<p>Current AI-enabled tools already provide:</p>
+<ul>
+<li>Data summarization</li>
+<li>Suggestions and recommendations</li>
+<li>Anomaly detection</li>
+<li>Alerts and notifications</li>
+</ul>
+
+<p>Yet the operational workflow still looks like:</p>
+<p>Signal → Search → Interpret → Find owner → Coordinate → Execute → Follow up → Report</p>
+
+<p>The remaining human effort is concentrated in:</p>
+<ul>
+<li>Deciding what matters now</li>
+<li>Reconstructing context across systems</li>
+<li>Finding the right owner and stakeholders</li>
+<li>Turning insight into communication and action</li>
+<li>Following the issue until it is resolved</li>
+</ul>
+
+<p>Core opportunity</p>
+<p><strong>The gap is not better information retrieval. The gap is operational follow-through.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 4 -->
+
+<section>
+<p>Slide 4</p>
+<h2>From Information Retrieval to Work Execution</h2>
+
+<p>Today</p>
+<p>Alert → Open multiple systems → Search emails → Reconstruct context → Find owner → Draft communication → Chase responses → Update tracker</p>
+
+<p>With an AI teammate</p>
+<p>Signal → Contextualized task → Prioritized action → Draft communication → Human approval → Track to closure</p>
+
+<p>What changes</p>
+<ul>
+<li>Information is organized around the task, not the source system.</li>
+<li>The planner spends less time reconstructing context.</li>
+<li>Communication becomes part of the workflow rather than a separate task.</li>
+<li>Follow-up becomes visible and trackable.</li>
+</ul>
+
+<p>What does not change</p>
+<p>The planner remains accountable for consequential business decisions.</p>
+</section>
+
+<hr>
+
+<!-- Slide 5 -->
+
+<section>
+<p>Slide 5</p>
+<h2>Product Vision: AI Organized Around My Work</h2>
+
+<p>An AI teammate should:</p>
+
+<ul>
+<li><strong>Understand me:</strong> role, ownership, priorities, and working context</li>
+<li><strong>Understand my work:</strong> tasks, business objects, deadlines, and dependencies</li>
+<li><strong>Watch for what matters:</strong> continuously monitor relevant business activity</li>
+<li><strong>Recommend the next move:</strong> explain what happened, why it matters, and what to do next</li>
+<li><strong>Help execute:</strong> prepare communication, actions, and follow-ups</li>
+<li><strong>Learn from feedback:</strong> improve through explicit feedback and observed outcomes</li>
+</ul>
+
+<p>Defining principle</p>
+<p><strong>The difference between a chatbot and a teammate is not conversation. It is the ability to take responsibility for work within clear boundaries.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 6 -->
+
+<section>
+<p>Slide 6</p>
+<h2>Five Product Principles</h2>
+
+<ol>
+<li><strong>Task-oriented, not feature-oriented</strong><br>
+Organize the experience around tasks, priorities, owners, and deadlines.</li>
+
+<li><strong>Proactive, but selective</strong><br>
+Optimize for signal and actionability rather than notification volume.</li>
+
+<li><strong>Evidence before confidence</strong><br>
+Show source data, business context, and explicit uncertainty behind important conclusions.</li>
+
+<li><strong>Progressive delegation</strong><br>
+Move from read → recommend → draft → approve → bounded autonomy as trust is earned.</li>
+
+<li><strong>Governance by design</strong><br>
+Permissions, auditing, data isolation, evaluation, and safety controls are platform primitives.</li>
+</ol>
+</section>
+
+<hr>
+
+<!-- Slide 7 -->
+
+<section>
+<p>Slide 7</p>
+<h2>How I Prioritize the First Use Case</h2>
+
+<p>I would evaluate candidate roles and workflows across six dimensions:</p>
+
+<ol>
+<li><strong>Business value</strong><br>
+Frequency, time spent, decision impact, and measurable business outcomes.</li>
+
+<li><strong>Data readiness</strong><br>
+Availability, quality, accessibility, and ownership of relevant data.</li>
+
+<li><strong>Workflow standardization</strong><br>
+Repeatability and consistency of the work process.</li>
+
+<li><strong>Risk controllability</strong><br>
+Business impact of AI errors and the ability to maintain human oversight.</li>
+
+<li><strong>Platform reuse</strong><br>
+Potential to reuse task, context, action, evaluation, and governance capabilities.</li>
+
+<li><strong>Learning velocity</strong><br>
+How quickly the team can validate the product hypothesis with representative users.</li>
+</ol>
+
+<p>Decision principle</p>
+<p><strong>Choose the first wedge where we can learn quickly, create measurable value, and build reusable platform capabilities at the same time.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 8 -->
+
+<section>
+<p>Slide 8</p>
+<h2>Role Prioritization</h2>
+
+<table border="1">
+<thead>
+<tr>
+<th>Role</th>
+<th>Business Value</th>
+<th>Data Readiness</th>
+<th>Workflow Standardization</th>
+<th>Risk Controllability</th>
+<th>Platform Reuse</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Supply/Demand Planner</td>
+<td>High</td>
+<td>High</td>
+<td>High</td>
+<td>Manageable</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Procurement / GSM</td>
+<td>High</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Higher</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Logistics</td>
+<td>Medium–High</td>
+<td>Medium</td>
+<td>Medium</td>
+<td>Manageable</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Manufacturing Interface</td>
+<td>High</td>
+<td>Lower</td>
+<td>Lower</td>
+<td>Higher</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>Operations Management</td>
+<td>Medium</td>
+<td>Dependent on execution data</td>
+<td>Medium–High</td>
+<td>Manageable</td>
+<td>High</td>
+</tr>
+<tr>
+<td>Executives</td>
+<td>Strategically High</td>
+<td>Dependent on upstream data</td>
+<td>Lower frequency</td>
+<td>Manageable</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+
+<p>Important assumption</p>
+<p>This is a working prioritization based on the case information, not a claim about the organization's actual internal ranking.</p>
+</section>
+
+<hr>
+
+<!-- Slide 9 -->
+
+<section>
+<p>Slide 9</p>
+<h2>Why Start with the Supply/Demand Planner?</h2>
+
+<p>Based on the assumptions available today, SDP offers the strongest starting point because:</p>
+
+<ul>
+<li>High-frequency operational decisions create a large recurring opportunity.</li>
+<li>The core workflow can be standardized enough to support an initial AI-assisted loop.</li>
+<li>Relevant operational data is more likely to be available in structured internal systems.</li>
+<li>The consequences of individual recommendation errors can remain within a human approval boundary in the MVP.</li>
+<li>The underlying capabilities — ownership, task context, prioritization, recommendation, communication, and follow-up — are highly reusable.</li>
+</ul>
+
+<p>Why not start elsewhere?</p>
+
+<ul>
+<li><strong>Procurement / GSM:</strong> more external data and heterogeneous communication patterns.</li>
+<li><strong>Logistics:</strong> multiple internal and external event sources increase integration complexity.</li>
+<li><strong>Manufacturing interface:</strong> partner-specific processes reduce workflow standardization.</li>
+<li><strong>Executives:</strong> the executive experience depends on reliable upstream operational intelligence.</li>
+</ul>
+
+<p>Decision</p>
+<p><strong>SDP is the first wedge, not the final target.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 10 -->
+
+<section>
+<p>Slide 10</p>
+<h2>What We Need to Prove</h2>
+
+<p>Four product hypotheses guide the MVP.</p>
+
+<ol>
+<li><strong>Prioritization hypothesis</strong><br>
+Planners will trust the AI to identify which operational issues deserve attention first.</li>
+
+<li><strong>Context hypothesis</strong><br>
+AI-generated context will reduce the manual effort required to investigate an issue.</li>
+
+<li><strong>Delegation hypothesis</strong><br>
+Planners will trust AI to take over preparation and coordination work while retaining approval control.</li>
+
+<li><strong>Platform hypothesis</strong><br>
+The underlying task, context, action, feedback, and governance primitives will generalize to other supply chain workflows.</li>
+</ol>
+
+<p>Therefore</p>
+<p>The MVP is designed as a learning system, not just a feature release.</p>
+</section>
+
+<hr>
+
+<!-- Slide 11 -->
+
+<section>
+<p>Slide 11</p>
+<h2>MVP Scope</h2>
+
+<p>Initial pilot assumption</p>
+<p>One product line · One region · Approximately 20 representative users · Selected based on workflow and data readiness</p>
+
+<p><strong>P0 — Exception-to-Resolution</strong></p>
+<ul>
+<li>Task-level exception identification</li>
+<li>Context assembly</li>
+<li>Impact and root-cause analysis</li>
+<li>Recommended next actions</li>
+<li>Human-reviewed communication drafts</li>
+<li>Internal action-item creation and follow-up</li>
+</ul>
+
+<p><strong>P1 — Personalized Daily Brief</strong></p>
+<ul>
+<li>Top priorities</li>
+<li>Why each item matters</li>
+<li>Recommended actions</li>
+<li>Relevant owners and stakeholders</li>
+<li>Evidence and feedback</li>
+</ul>
+
+<p><strong>P1 — Operations Update / Weekly Report Draft</strong></p>
+<ul>
+<li>Summarize current tasks, risks, and actions</li>
+<li>Generate daily and weekly reporting drafts</li>
+</ul>
+
+<p>Explicitly out of scope</p>
+<p>Generic enterprise Q&amp;A · Autonomous external communication · Unsupervised system write-back · Cross-vendor data sharing · Executive dashboard · Full global rollout</p>
+</section>
+
+<hr>
+
+<!-- Slide 12 -->
+
+<section>
+<p>Slide 12</p>
+<h2>Task Model: The Core Unit of the Experience</h2>
+
+<p>The platform organizes information around a task rather than around individual alerts or source systems.</p>
+
+<p>Task attributes</p>
+<ul>
+<li>Business object</li>
+<li>Issue type</li>
+<li>Priority</li>
+<li>Owner</li>
+<li>Due date / SLA</li>
+<li>Business impact</li>
+<li>Evidence</li>
+<li>Recommended actions</li>
+<li>Stakeholders</li>
+<li>Status</li>
+<li>Approval state</li>
+<li>Outcome</li>
+</ul>
+
+<p>Example</p>
+<p>Potential material shortage → affected order → priority → planner owner → supplier contact → recommended action → approval → follow-up → closure</p>
+
+<p>Why this matters</p>
+<p><strong>The task model becomes the common abstraction that allows the same AI capabilities to work across planning, procurement, logistics, and operations.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 13 -->
+
+<section>
+<p>Slide 13</p>
+<h2>Entry Point: Personalized Daily Brief</h2>
+
+<p>User expectation</p>
+<p>“When I start my day, tell me what I need to care about, why it matters, and what I should do next.”</p>
+
+<p>Every operating day, the AI teammate provides:</p>
+
+<ol>
+<li><strong>Top priorities:</strong> a limited set of issues ranked by business impact and urgency</li>
+<li><strong>Why it matters:</strong> affected orders, materials, quantities, timelines, and ownership</li>
+<li><strong>Recommended actions:</strong> two to three concrete next steps</li>
+<li><strong>Who to involve:</strong> relevant owners, stakeholders, and escalation paths</li>
+<li><strong>Evidence:</strong> source data and supporting business context</li>
+</ol>
+
+<p>Feedback</p>
+<p>Useful · Not relevant · Threshold too sensitive · Wrong owner · Already resolved</p>
+
+<p>Guardrail</p>
+<p>Only high-signal items should interrupt the user. Lower-confidence or lower-priority items go to an observation queue.</p>
+</section>
+
+<hr>
+
+<!-- Slide 14 -->
+
+<section>
+<p>Slide 14</p>
+<h2>Core Value Engine: Exception-to-Resolution</h2>
+
+<p>Six-step workflow</p>
+
+<ol>
+<li><strong>Detect &amp; group</strong><br>
+Turn multiple related signals into a smaller number of task-level issues.</li>
+
+<li><strong>Build context</strong><br>
+Bring together relevant PO, inventory, shipment, capacity, SLA, ownership, and historical context.</li>
+
+<li><strong>Explain impact</strong><br>
+Separate confirmed facts from hypotheses and clearly identify uncertainty.</li>
+
+<li><strong>Recommend next actions</strong><br>
+Provide practical options, owners, and escalation paths.</li>
+
+<li><strong>Coordinate</strong><br>
+Draft email / IM communication, meeting agendas, and internal action items for human review.</li>
+
+<li><strong>Track to closure</strong><br>
+Monitor status, due dates, follow-ups, and lessons learned.</li>
+</ol>
+
+<p>Illustrative transformation</p>
+<p>10 alerts → 3 task-level issues → 3 context packs → recommended actions → reviewed communications → tracked closure</p>
+
+<p>Core promise</p>
+<p><strong>Move from “people chasing alerts” to “tasks arriving with context and next actions.”</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 15 -->
+
+<section>
+<p>Slide 15</p>
+<h2>Supporting Workflow: Operational Updates</h2>
+
+<p>Once the task model exists, reporting becomes a natural downstream use case.</p>
+
+<ul>
+<li>Automatically summarize progress, risks, and open actions within the user's responsibility scope.</li>
+<li>Generate daily operational updates and weekly meeting drafts.</li>
+<li>Allow simple transformations such as “compress the logistics section into three sentences.”</li>
+<li>Maintain links back to the underlying tasks and evidence.</li>
+</ul>
+
+<p>Why this is secondary</p>
+<p>Report generation saves time, but exception resolution creates the stronger test of whether the system can actually move work forward.</p>
+</section>
+
+<hr>
+
+<!-- Slide 16 -->
+
+<section>
+<p>Slide 16</p>
+<h2>What Makes This a Platform?</h2>
+
+<p>The MVP is narrow in workflow, but broad in reusable primitives.</p>
+
+<table border="1">
+<thead>
+<tr>
+<th>Platform Primitive</th>
+<th>MVP Application</th>
+<th>Future Reuse</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity &amp; Role</td>
+<td>Understand planner ownership</td>
+<td>All supply chain roles</td>
+</tr>
+<tr>
+<td>Business Context</td>
+<td>Orders, inventory, shipments, SLA</td>
+<td>Procurement, logistics, manufacturing</td>
+</tr>
+<tr>
+<td>Task Model</td>
+<td>Exception → owner → due date → status</td>
+<td>Cross-functional operational work</td>
+</tr>
+<tr>
+<td>Insight &amp; Reasoning</td>
+<td>Impact, root cause, recommendation</td>
+<td>Additional workflows and roles</td>
+</tr>
+<tr>
+<td>Action Layer</td>
+<td>Draft, create, follow up</td>
+<td>Broader controlled execution</td>
+</tr>
+<tr>
+<td>Feedback &amp; Evaluation</td>
+<td>Accept, reject, correct</td>
+<td>Continuous quality improvement</td>
+</tr>
+<tr>
+<td>Governance</td>
+<td>Permission, approval, audit</td>
+<td>Platform-wide AI operations</td>
+</tr>
+</tbody>
+</table>
+
+<p>Platform principle</p>
+<p><strong>Workflows remain role-specific. Core AI capabilities and governance should be reusable.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 17 -->
+
+<section>
+<p>Slide 17</p>
+<h2>Trust Model: Progressive Delegation</h2>
+
+<p>AI autonomy should increase only as quality, trust, and governance are proven.</p>
+
+<ul>
+<li><strong>L0 — Understand:</strong> retrieve, summarize, explain</li>
+<li><strong>L1 — Recommend:</strong> prioritize and suggest actions</li>
+<li><strong>L2 — Draft:</strong> prepare communications, reports, and action items</li>
+<li><strong>L3 — Approve &amp; execute:</strong> execute approved actions within bounded workflows</li>
+<li><strong>L4 — Bounded autonomy:</strong> automatically execute narrowly defined, low-risk actions</li>
+</ul>
+
+<p>MVP position</p>
+<p>Primarily L0–L2, with limited L3 for internal action management where appropriate.</p>
+
+<p>Core rule</p>
+<p><strong>Automation follows evidence of trust; trust is not assumed from model capability alone.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 18 -->
+
+<section>
+<p>Slide 18</p>
+<h2>AI Quality, Safety, and Governance</h2>
+
+<p>Quality evaluation</p>
+<ul>
+<li><strong>Grounding:</strong> Is the response based on the correct source data and business context?</li>
+<li><strong>Prioritization:</strong> Did the AI surface the right issues without creating unnecessary interruptions?</li>
+<li><strong>Reasoning:</strong> Are confirmed facts separated from assumptions?</li>
+<li><strong>Recommendation:</strong> Are suggested actions appropriate, actionable, and policy-compliant?</li>
+<li><strong>Communication:</strong> Are generated drafts accurate and properly scoped?</li>
+</ul>
+
+<p>Safety controls</p>
+<ul>
+<li>Authorization enforced at retrieval and tool layers</li>
+<li>Business content and tool outputs treated as untrusted input</li>
+<li>Tool allowlists and parameter validation</li>
+<li>Cross-vendor data isolation</li>
+<li>Human approval for consequential actions</li>
+<li>Full audit trail and source lineage</li>
+</ul>
+
+<p>Evaluation loop</p>
+<p>Golden cases → Offline evaluation → Red team → Shadow mode → Human-in-the-loop pilot → Production monitoring</p>
+</section>
+
+<hr>
+
+<!-- Slide 19 -->
+
+<section>
+<p>Slide 19</p>
+<h2>10-Week MVP Delivery Plan</h2>
+
+<p><strong>Weeks 1–2 — Discover &amp; Baseline</strong></p>
+<ul>
+<li>User interviews and workflow observation</li>
+<li>Baseline current time and resolution performance</li>
+<li>Confirm data access, quality, and ownership</li>
+<li>Security and governance review</li>
+</ul>
+
+<p><strong>Weeks 3–6 — Build One End-to-End Workflow</strong></p>
+<ul>
+<li>Task/context model</li>
+<li>Exception grouping and context assembly</li>
+<li>Daily brief</li>
+<li>Recommendations and communication drafting</li>
+<li>Internal action tracking</li>
+</ul>
+
+<p><strong>Weeks 7–8 — Evaluate &amp; Harden</strong></p>
+<ul>
+<li>Golden cases and regression evaluation</li>
+<li>Red-team and permission testing</li>
+<li>Usability testing</li>
+<li>Shadow-mode validation where appropriate</li>
+</ul>
+
+<p><strong>Weeks 9–10 — Pilot</strong></p>
+<ul>
+<li>Approximately 20 pilot users, subject to readiness</li>
+<li>Matched comparison group where practical</li>
+<li>Weekly quality and business reviews</li>
+</ul>
+
+<p>Scope-for-certainty trade-off</p>
+<p><strong>One role + one workflow + limited data domains + human approval.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 20 -->
+
+<section>
+<p>Slide 20</p>
+<h2>How We Measure Success</h2>
+
+<p><strong>Business outcomes</strong></p>
+<ul>
+<li>Time to resolve high-priority exceptions</li>
+<li>Percentage of priority issues resolved within SLA</li>
+<li>Coordinator time spent per issue</li>
+<li>Time spent preparing operational updates</li>
+</ul>
+
+<p><strong>User behavior</strong></p>
+<ul>
+<li>AI-assisted tasks per user per week</li>
+<li>Recommendation acceptance rate</li>
+<li>Draft acceptance rate</li>
+<li>Repeat usage across operating cycles</li>
+</ul>
+
+<p><strong>AI quality</strong></p>
+<ul>
+<li>Precision of proactive issues surfaced</li>
+<li>Recommendation correctness</li>
+<li>Evidence / source coverage</li>
+<li>Human override and correction rate</li>
+</ul>
+
+<p><strong>Safety</strong></p>
+<ul>
+<li>Permission leakage incidents = 0</li>
+<li>Unsafe action rate = 0</li>
+<li>False escalation rate</li>
+<li>Audit completeness</li>
+</ul>
+
+<p>Measurement principle</p>
+<p><strong>Optimize for work completed and value created — not time spent interacting with the AI.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 21 -->
+
+<section>
+<p>Slide 21</p>
+<h2>Pilot Design and Decision Gates</h2>
+
+<p>Baseline</p>
+<p>Approximately two weeks of workflow observation using time logs, system telemetry, and representative case samples.</p>
+
+<p>Pilot comparison</p>
+<p>Where practical, compare pilot users with a matched group or compare equivalent pre- and post-pilot workflows.</p>
+
+<p>Quality assessment</p>
+<p>Use structured human review for prioritization, recommendation quality, and evidence quality.</p>
+
+<p>Qualitative feedback</p>
+<p>Regularly interview users to understand why they accepted, ignored, or overrode AI recommendations.</p>
+
+<p>Decision gates</p>
+
+<ul>
+<li><strong>Scale:</strong> meaningful improvement in operational outcomes, sustained repeat usage, acceptable AI quality, and no material security or permission failures.</li>
+<li><strong>Iterate:</strong> users engage with the system, but business impact or trust remains weak.</li>
+<li><strong>Pause:</strong> quality, safety, permission, or governance thresholds are not met.</li>
+</ul>
+
+<p>Principle</p>
+<p><strong>Predefine the evidence required to scale before the pilot begins.</strong></p>
+</section>
+
+<hr>
+
+<!-- Slide 22 -->
+
+<section>
+<p>Slide 22</p>
+<h2>Scale Through Reusable Platform Capabilities</h2>
+
+<p><strong>Phase 1 — Prove the model</strong></p>
+<p>One persona · One workflow · High-quality internal data · Human approval</p>
+
+<p><strong>Phase 2 — Expand the platform</strong></p>
+<p>Add procurement, logistics, and management workflows using the same context, task, action, feedback, and governance primitives.</p>
+
+<p><strong>Phase 3 — Cross-functional orchestration</strong></p>
+<p>Connect tasks across planning, procurement, logistics, and manufacturing workflows.</p>
+
+<p><strong>Phase 4 — Bounded autonomy</strong></p>
+<p>Automate narrowly defined, low-risk actions after sufficient evidence of quality and trust.</p>
+
+<p>Long-term vision</p>
+<p>A personalized AI teammate for every supply chain employee, built on a common platform foundation with role-specific workflows.</p>
+</section>
+
+<hr>
+
+<!-- Slide 23 -->
+
+<section>
+<p>Slide 23</p>
+<h2>Key Trade-offs</h2>
+
+<p><strong>Breadth vs. depth</strong><br>
+Start with one workflow instead of building a generic assistant.</p>
+
+<p><strong>Automation vs. trust</strong><br>
+Start with human approval and expand autonomy only after validation.</p>
+
+<p><strong>Generality vs. data quality</strong><br>
+Use a limited set of high-quality data domains before expanding coverage.</p>
+
+<p><strong>Short-term efficiency vs. long-term platform value</strong><br>
+Use a narrow MVP to validate reusable platform primitives.</p>
+
+<p><strong>Speed vs. governance</strong><br>
+Move quickly inside controlled boundaries rather than treating governance as a later phase.</p>
+</section>
+
+<hr>
+
+<!-- Slide 24 -->
+
+<section>
+<p>Slide 24</p>
+<h2>Closing</h2>
+
+<p><strong>Start narrow. Learn fast. Build reusable.</strong></p>
+
+<p>One persona and one workflow prove the value.</p>
+
+<p>Reusable task, context, action, feedback, evaluation, and governance capabilities create the platform.</p>
+
+<p>The long-term goal is not another AI assistant.</p>
+
+<p><strong>It is an AI teammate that helps every supply chain employee move work from signal to resolution.</strong></p>
+
+<p>Thank you.</p>
+</section>
+
+</body>
+</html>
