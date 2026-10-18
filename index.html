@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maggie 马竞 · 自我介绍</title>
+
+<!-- 字体：Google Fonts（拉丁/数字用 Sora，中文用 Noto Sans SC），离线时回退到系统字体 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   （完整内嵌 viewport-base.css）
+   =========================================== */
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+@media print {
+    html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; background: #fff; }
+    .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px; height: 1080px;
+        break-after: page; page-break-after: always;
+    }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .deck-controls { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ===========================================
+   THEME TOKENS（灰阶底色 + 橙色高亮）
+   =========================================== */
+:root {
+    --bg:        #151517;
+    --bg-2:      #1d1d20;
+    --bg-3:      #26262a;
+    --line:      #32323a;
+    --ink:       #f4f3f1;
+    --ink-2:     #a6a6a1;
+    --ink-3:     #6f6f6b;
+
+    --accent:       #ff6b2c;
+    --accent-soft:  rgba(255,107,44,0.14);
+    --accent-glow:  rgba(255,107,44,0.35);
+
+    --font-display: 'Sora', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    --font-body:    'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+
+    --t-hero:   104px;
+    --t-title:  64px;
+    --t-h2:     38px;
+    --t-body:   28px;
+    --t-small:  21px;
+    --t-caption:17px;
+
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===========================================
+   BASE
+   =========================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font-body); color: var(--ink); -webkit-font-smoothing: antialiased; }
+
+.deck-stage::after {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.slide { background: radial-gradient(120% 120% at 50% 0%, #1b1b1e 0%, var(--bg) 55%); }
+
+/* ===========================================
+   通用页眉
+   =========================================== */
+.slide-header {
+    position: absolute;
+    top: 56px; left: 72px; right: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+}
+.slide-header .brand {
+    font-family: var(--font-display);
+    font-size: var(--t-caption);
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+}
+.slide-header .brand b { color: var(--accent); font-weight: 600; }
+.slide-header .tag {
+    font-size: var(--t-caption);
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+}
+.slide-header .tag em { color: var(--accent); font-style: normal; }
+
+/* ===========================================
+   通用组件
+   =========================================== */
+.section-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--t-title);
+    line-height: 1.05;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+}
+.section-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-size: var(--t-caption);
+    letter-spacing: 0.3em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    font-family: var(--font-display);
+}
+.section-kicker::before {
+    content: "";
+    width: 34px; height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+.hl { color: var(--accent); font-weight: 700; }
+
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s var(--ease) var(--d, 0s), transform 0.7s var(--ease) var(--d, 0s);
+}
+.reveal-left {
+    opacity: 0;
+    transform: translateX(-36px);
+    transition: opacity 0.7s var(--ease) var(--d, 0s), transform 0.7s var(--ease) var(--d, 0s);
+}
+.reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.7s var(--ease) var(--d, 0s), transform 0.7s var(--ease) var(--d, 0s);
+}
+.slide.visible .reveal,
+.slide.visible .reveal-left,
+.slide.visible .reveal-scale { opacity: 1; transform: none; }
+
+/* ===========================================
+   导航控件
+   =========================================== */
+.deck-controls {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 12px 22px;
+    border-radius: 100px;
+    background: rgba(21,21,23,0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--line);
+}
+.nav-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-2);
+    font-size: 18px;
+    cursor: pointer;
+    display: grid; place-items: center;
+    transition: all 0.25s var(--ease);
+}
+.nav-btn:hover { color: var(--ink); border-color: var(--accent); }
+.dots { display: flex; gap: 9px; }
+.dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--ink-3);
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+.dot.on { background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); width: 22px; border-radius: 100px; }
+.counter {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink-2);
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    min-width: 56px; text-align: center;
+}
+.counter b { color: var(--accent); font-weight: 700; }
+
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 84px; height: 84px; z-index: 10000; cursor: pointer; }
+.edit-toggle {
+    position: fixed; top: 18px; left: 18px;
+    z-index: 10001;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: rgba(21,21,23,0.7);
+    color: var(--ink-2);
+    cursor: pointer;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active { color: var(--accent); border-color: var(--accent); }
+[contenteditable="true"] { outline: 1px dashed rgba(255,107,44,0.5); outline-offset: 3px; }
+
+/* ===========================================
+   P1 · 封面（水墨山峦 + 柔和日出）
+   =========================================== */
+.slide-cover { background: radial-gradient(120% 130% at 78% -10%, #242127 0%, #141416 48%, #101012 100%); }
+.cover-bg { position: absolute; inset: 0; z-index: 0; }
+.cover-bg svg { width: 100%; height: 100%; display: block; }
+@keyframes sunBreathe { 0%,100% { opacity: 0.7; } 50% { opacity: 1; } }
+@keyframes mistDrift   { from { transform: translateX(0); } to { transform: translateX(-60px); } }
+.cover-bg .sun  { animation: sunBreathe 9s ease-in-out infinite; }
+.cover-bg .mist { animation: mistDrift 16s ease-in-out infinite alternate; }
+
+.cover-content {
+    position: absolute; inset: 0;
+    z-index: 2;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 0 96px;
+}
+.cover-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--t-hero);
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+.cover-name .cn {
+    font-family: var(--font-body);
+    font-weight: 900;
+    margin-left: 20px;
+    font-size: calc(var(--t-hero) * 0.92);
+}
+.cover-sub {
+    margin-top: 28px;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--ink-2);
+    letter-spacing: 0.02em;
+}
+.cover-sub .hl { font-weight: 700; }
+.cover-foot {
+    position: absolute;
+    left: 96px; bottom: 64px;
+    z-index: 2;
+    display: flex; align-items: center; gap: 16px;
+    font-family: var(--font-display);
+    font-size: var(--t-caption);
+    letter-spacing: 0.4em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+}
+.cover-foot::before { content: ""; width: 44px; height: 2px; background: var(--accent); border-radius: 2px; }
+
+/* ===========================================
+   P2 · 足迹（真实世界地图 · 仅欧亚）
+   =========================================== */
+.slide-map { background: radial-gradient(120% 120% at 30% 30%, #1b1b1e 0%, var(--bg) 60%); }
+.map-wrap {
+    position: absolute;
+    left: 470px; right: 56px; top: 90px; bottom: 90px;
+    z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+}
+.world-map {
+    flex: none;
+    display: block;
+    max-width: 100%; max-height: 100%;
+    width: auto; height: auto;
+    border-radius: 8px;
+}
+.map-title { position: absolute; top: 150px; left: 72px; z-index: 3; }
+.map-legend {
+    position: absolute;
+    left: 72px; bottom: 96px; z-index: 3;
+    display: flex; flex-direction: column; gap: 14px;
+}
+.legend-row { display: flex; align-items: baseline; gap: 14px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex: none; transform: translateY(-1px); }
+.legend-row .k { font-size: var(--t-small); color: var(--ink-3); min-width: 64px; letter-spacing: 0.1em; }
+.legend-row .v { font-size: var(--t-small); color: var(--ink-2); font-weight: 500; }
+.legend-row .v b { color: var(--ink); font-weight: 700; }
+
+/* ===========================================
+   P3 · 经验（时间轴 + 两个 AI 项目卡片）
+   =========================================== */
+.slide-exp { background: radial-gradient(120% 120% at 80% 0%, #1b1b1e 0%, var(--bg) 60%); }
+.exp-title { position: absolute; top: 150px; left: 72px; z-index: 3; }
+.exp-grid {
+    position: absolute;
+    top: 310px; left: 96px; right: 96px; bottom: 120px;
+    display: grid;
+    grid-template-columns: 430px 1fr;
+    gap: 72px;
+}
+.timeline { position: relative; }
+.timeline .axis { position: absolute; left: 7px; top: 10px; bottom: 10px; width: 2px; background: var(--line); border-radius: 2px; }
+.t-node { position: relative; padding-left: 44px; }
+.t-node + .t-node { margin-top: 72px; }
+.t-node .dot { position: absolute; left: 0; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft); }
+.t-node .yr { font-family: var(--font-display); font-size: var(--t-h2); font-weight: 800; color: var(--accent); letter-spacing: 0.01em; }
+.t-node .phase { margin-top: 10px; font-size: var(--t-body); font-weight: 700; color: var(--ink); }
+.t-node .desc { margin-top: 8px; font-size: var(--t-small); color: var(--ink-2); line-height: 1.7; }
+
+.cards { display: flex; flex-direction: column; gap: 30px; justify-content: center; }
+.card {
+    background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 38px 42px;
+    position: relative;
+    overflow: hidden;
+}
+.card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); border-radius: 4px; }
+.card-head { display: flex; align-items: baseline; gap: 20px; }
+.card-title { font-size: var(--t-h2); font-weight: 700; color: var(--ink); }
+.card-sub { font-size: var(--t-small); color: var(--ink-2); }
+.card-desc { margin-top: 14px; font-size: var(--t-small); color: var(--ink-2); line-height: 1.7; }
+.mini-row { display: flex; flex-wrap: wrap; gap: 14px 44px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.metric { display: inline-flex; align-items: baseline; gap: 10px; }
+.metric .m-label { font-size: var(--t-caption); color: var(--ink-3); letter-spacing: 0.02em; }
+.metric .num { font-family: var(--font-display); font-weight: 800; font-size: 32px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.metric .num.dim { color: var(--ink-3); font-weight: 600; }
+.metric .unit { font-size: var(--t-caption); color: var(--ink-2); }
+
+/* ===========================================
+   P4 · 上山下海（三列拼贴：竖图两侧、横图居中）
+   =========================================== */
+.slide-photo { background: radial-gradient(120% 120% at 50% 0%, #1b1b1e 0%, var(--bg) 60%); }
+.photo-title { position: absolute; top: 150px; left: 72px; z-index: 3; }
+.photo-collage {
+    position: absolute;
+    left: 96px; right: 96px; top: 300px; bottom: 110px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+}
+.photo-collage .ph {
+    position: relative;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+}
+.photo-collage .ph img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* 裁剪位置：偏上 / 偏下 */
+.pos-top { object-position: center top; }
+.pos-bottom { object-position: center bottom; }
+.photo-collage .ph::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5));
+    pointer-events: none;
+}
+.photo-collage .ph-name {
+    position: absolute; left: 26px; bottom: 22px; z-index: 2;
+    font-size: var(--t-body); font-weight: 700; color: var(--ink);
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.6);
+}
+.photo-collage .g1 { grid-column: 1; grid-row: 1 / span 2; }  /* 越野跑 · 竖 */
+.photo-collage .g2 { grid-column: 2; grid-row: 1; }            /* 滑雪 · 横 */
+.photo-collage .g3 { grid-column: 2; grid-row: 2; }            /* 潜水 · 横 */
+.photo-collage .g4 { grid-column: 3; grid-row: 1 / span 2; }   /* 爬山 · 竖 */
+
+/* ===========================================
+   P5 · 日常与艺术（三列：运动 / 创作 / 生活）
+   =========================================== */
+.slide-daily { background: radial-gradient(120% 120% at 20% 0%, #1b1b1e 0%, var(--bg) 60%); }
+.daily-title { position: absolute; top: 150px; left: 72px; z-index: 3; }
+.daily-grid {
+    position: absolute;
+    left: 96px; right: 96px; top: 300px; bottom: 110px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+}
+.daily-grid .tile {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+}
+.daily-grid .tile img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.daily-grid .tile::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.5));
+    pointer-events: none;
+}
+.capsule {
+    position: absolute;
+    bottom: 16px; left: 16px; z-index: 2;
+    background: #fff;
+    color: #1a1a1c;
+    border: 1px solid var(--accent);
+    font-size: var(--t-caption);
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+}
+
+/* ===========================================
+   P6 · 接下来（三张紧凑卡片）
+   =========================================== */
+.slide-next { background: radial-gradient(120% 120% at 50% 100%, #1b1b1e 0%, var(--bg) 55%); }
+.next-title { position: absolute; top: 150px; left: 72px; z-index: 3; }
+.next-grid {
+    position: absolute;
+    left: 96px; right: 96px; top: 320px; bottom: 180px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    align-content: center;
+}
+.next-card {
+    background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 38px 38px;
+    display: flex; flex-direction: column;
+}
+.next-card .head { display: flex; align-items: baseline; gap: 18px; }
+.next-card .no {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+.next-card .t { font-size: 30px; font-weight: 700; color: var(--ink); }
+.next-card .d { margin-top: 18px; font-size: var(--t-small); color: var(--ink-2); line-height: 1.8; }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+    <main class="deck-stage" id="deckStage">
+
+        <!-- ================= P1 · 封面 ================= -->
+        <section class="slide slide-cover active">
+            <div class="cover-bg" aria-hidden="true">
+                <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+                    <defs>
+                        <filter id="soft18" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="18"/></filter>
+                        <filter id="soft8"  x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="8"/></filter>
+                        <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ffd9b5" stop-opacity="0.65"/>
+                            <stop offset="32%" stop-color="#ffb277" stop-opacity="0.26"/>
+                            <stop offset="100%" stop-color="#ff6b2c" stop-opacity="0"/>
+                        </radialGradient>
+                        <linearGradient id="mFar" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#3b3b42" stop-opacity="0"/>
+                            <stop offset="100%" stop-color="#2c2c32" stop-opacity="0.85"/>
+                        </linearGradient>
+                        <linearGradient id="mMid" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#2e2e34" stop-opacity="0"/>
+                            <stop offset="100%" stop-color="#232328" stop-opacity="0.95"/>
+                        </linearGradient>
+                        <linearGradient id="mNear" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#222226" stop-opacity="0.1"/>
+                            <stop offset="100%" stop-color="#16161a" stop-opacity="1"/>
+                        </linearGradient>
+                        <linearGradient id="fog" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#cfd0d4" stop-opacity="0"/>
+                            <stop offset="50%" stop-color="#cfd0d4" stop-opacity="0.08"/>
+                            <stop offset="100%" stop-color="#cfd0d4" stop-opacity="0"/>
+                        </linearGradient>
+                    </defs>
+
+                    <circle class="sun" cx="1500" cy="570" r="200" fill="url(#sun)" filter="url(#soft18)"/>
+                    <path d="M0 620 C 220 540 430 590 660 530 C 890 470 1080 560 1280 520 C 1460 486 1650 540 1920 500 L1920 1080 L0 1080 Z" fill="url(#mFar)" filter="url(#soft18)"/>
+                    <rect class="mist" x="-200" y="636" width="2400" height="140" fill="url(#fog)"/>
+                    <path d="M0 720 C 260 660 500 740 780 670 C 1040 606 1260 720 1520 670 C 1720 636 1840 690 1920 668 L1920 1080 L0 1080 Z" fill="url(#mMid)" filter="url(#soft8)"/>
+                    <rect class="mist" x="-200" y="758" width="2400" height="110" fill="url(#fog)"/>
+                    <path d="M0 860 C 280 796 560 880 850 820 C 1130 764 1420 862 1720 818 C 1850 796 1910 836 1920 828 L1920 1080 L0 1080 Z" fill="url(#mNear)" filter="url(#soft8)"/>
+                    <g fill="none" stroke="#3c3c44" stroke-width="2.5" stroke-linecap="round" opacity="0.5">
+                        <path d="M0 952 Q 140 934 280 952 T 560 952 T 840 952 T 1120 952 T 1400 952 T 1680 952 T 1920 952"/>
+                        <path d="M0 992 Q 160 974 320 992 T 640 992 T 960 992 T 1280 992 T 1600 992 T 1920 992" opacity="0.65"/>
+                        <path d="M0 1032 Q 130 1016 260 1032 T 520 1032 T 780 1032 T 1040 1032 T 1300 1032 T 1560 1032 T 1820 1032 T 1920 1032" opacity="0.45"/>
+                    </g>
+                </svg>
+            </div>
+
+            <header class="slide-header">
+                <span class="brand">Maggie · <b>马竞</b></span>
+                <span class="tag"><em>01</em> / 06</span>
+            </header>
+
+            <div class="cover-content">
+                <h1 class="cover-name reveal" style="--d:.05s">
+                    <span class="editable">Maggie</span>
+                    <span class="cn editable">马竞</span>
+                </h1>
+                <p class="cover-sub reveal" style="--d:.2s">
+                    一个<span class="hl editable">“上山下海”</span>的 <span class="hl editable">AI 产品人</span>
+                </p>
+            </div>
+
+            <div class="cover-foot reveal" style="--d:.35s">
+                <span class="editable">HMT / MY TL</span>
+            </div>
+        </section>
+
+        <!-- ================= P2 · 足迹 ================= -->
+        <section class="slide slide-map">
+            <div class="map-wrap">
+                <img class="world-map" src="world.svg" alt="世界地图，标注去过的国家与城市">
+            </div>
+
+            <header class="slide-header">
+                <span class="brand">Maggie · <b>马竞</b></span>
+                <span class="tag"><em>02</em> / 06</span>
+            </header>
+
+            <div class="map-title reveal" style="--d:.05s">
+                <span class="section-kicker">Footprints</span>
+                <h2 class="section-title editable" style="margin-top:18px;">足迹</h2>
+            </div>
+
+            <div class="map-legend reveal" style="--d:.25s">
+                <div class="legend-row"><span class="legend-dot"></span><span class="k">出生</span><span class="v"><b class="editable">贵州</b></span></div>
+                <div class="legend-row"><span class="legend-dot"></span><span class="k">成长</span><span class="v"><b class="editable">深圳</b></span></div>
+                <div class="legend-row"><span class="legend-dot"></span><span class="k">学习</span><span class="v"><b class="editable">杭州 · 慕尼黑</b></span></div>
+                <div class="legend-row"><span class="legend-dot"></span><span class="k">工作</span><span class="v"><b class="editable">慕尼黑 · 上海</b></span></div>
+            </div>
+        </section>
+
+        <!-- ================= P3 · 经验 ================= -->
+        <section class="slide slide-exp">
+            <header class="slide-header">
+                <span class="brand">Maggie · <b>马竞</b></span>
+                <span class="tag"><em>03</em> / 06</span>
+            </header>
+
+            <div class="exp-title reveal" style="--d:.05s">
+                <span class="section-kicker">Experience</span>
+                <h2 class="section-title editable" style="margin-top:18px;">经验</h2>
+            </div>
+
+            <div class="exp-grid">
+                <div class="timeline">
+                    <div class="axis"></div>
+                    <div class="t-node reveal-left" style="--d:.1s">
+                        <span class="dot"></span>
+                        <div class="yr editable">2018 – 2024</div>
+                        <div class="phase editable">数字化解决方案</div>
+                        <p class="desc editable">面向制造业、园区、地产等场景。</p>
+                    </div>
+                    <div class="t-node reveal-left" style="--d:.3s">
+                        <span class="dot"></span>
+                        <div class="yr editable">2024 – 2026</div>
+                        <div class="phase editable">AI 产品</div>
+                        <p class="desc editable">企业级 AI 场景落地，聚焦用 AI 提效真实业务流程。</p>
+                    </div>
+                </div>
+
+                <div class="cards">
+                    <div class="card reveal-scale" style="--d:.2s">
+                        <div class="card-head">
+                            <span class="card-title editable">园区智能客服优化</span>
+                            <span class="card-sub editable">问答 · 工单 · 流程</span>
+                        </div>
+                        <p class="card-desc editable">优化园区客服的问答、工单与流程体验，端到端响应更快、回答更准。</p>
+                        <div class="mini-row">
+                            <span class="metric"><span class="m-label">P95 延迟</span><span class="num dim">15s</span><span class="unit">→</span><span class="num editable">8s</span><span class="unit">以内</span></span>
+                            <span class="metric"><span class="m-label">准确率</span><span class="num dim">72%</span><span class="unit">→</span><span class="num editable">90%</span></span>
+                        </div>
+                    </div>
+
+                    <div class="card reveal-scale" style="--d:.4s">
+                        <div class="card-head">
+                            <span class="card-title editable">合规评估与资金平衡 Agent</span>
+                            <span class="card-sub editable">合规评级 · 成本测算</span>
+                        </div>
+                        <p class="card-desc editable">针对咨询项目前期的合规评级与成本测算做自动化，方案一次通过率更高、整体测算更快。</p>
+                        <div class="mini-row">
+                            <span class="metric"><span class="m-label">一次合规通过率</span><span class="num editable">82%</span></span>
+                            <span class="metric"><span class="m-label">整体测算效率</span><span class="num editable">+90%</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= P4 · 上山下海 ================= -->
+        <section class="slide slide-photo">
+            <header class="slide-header">
+                <span class="brand">Maggie · <b>马竞</b></span>
+                <span class="tag"><em>04</em> / 06</span>
+            </header>
+
+            <div class="photo-title reveal" style="--d:.05s">
+                <span class="section-kicker">Hobbies</span>
+                <h2 class="section-title editable" style="margin-top:18px;">上山下海</h2>
+            </div>
+
+            <div class="photo-collage">
+                <div class="ph g1 reveal-scale" style="--d:.1s">
+                    <img src="photos/越野跑.jpg" alt="越野跑">
+                    <span class="ph-name editable">越野跑</span>
+                </div>
+                <div class="ph g2 reveal-scale" style="--d:.2s">
+                    <img src="photos/滑雪.jpeg" alt="滑雪" class="pos-top">
+                    <span class="ph-name editable">滑雪</span>
+                </div>
+                <div class="ph g3 reveal-scale" style="--d:.3s">
+                    <img src="photos/潜水.jpeg" alt="潜水" class="pos-top">
+                    <span class="ph-name editable">潜水</span>
+                </div>
+                <div class="ph g4 reveal-scale" style="--d:.4s">
+                    <img src="photos/爬山.jpg" alt="爬山">
+                    <span class="ph-name editable">爬山</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= P5 · 日常与艺术 ================= -->
+        <section class="slide slide-daily">
+            <header class="slide-header">
+                <span class="brand">Maggie · <b>马竞</b></span>
+                <span class="tag"><em>05</em> / 06</span>
+            </header>
+
+            <div class="daily-title reveal" style="--d:.05s">
+                <span class="section-kicker">Hobbies</span>
+                <h2 class="section-title editable" style="margin-top:18px;">日常与艺术</h2>
+            </div>
+
+            <div class="daily-grid">
+                <!-- 运动 -->
+                <div class="tile reveal-scale" style="--d:.1s">
+                    <img src="photos/羽毛球.jpeg" alt="羽毛球">
+                    <span class="capsule editable">运动 · 羽毛球</span>
+                </div>
+                <!-- 创作 -->
+                <div class="tile reveal-scale" style="--d:.2s">
+                    <img src="photos/绘画.jpeg" alt="绘画" style="object-position: center 20%;">
+                    <span class="capsule editable">创作 · 绘画</span>
+                </div>
+                <!-- 生活 -->
+                <div class="tile reveal-scale" style="--d:.3s">
+                    <img src="photos/烘焙.jpeg" alt="烘焙">
+                    <span class="capsule editable">生活 · 烘焙</span>
+                </div>
+                <!-- 运动 -->
+                <div class="tile reveal-scale" style="--d:.4s">
+                    <img src="photos/骑行.jpg" alt="骑行" style="object-position: center 80%;">
+                    <span class="capsule editable">运动 · 骑行</span>
+                </div>
+                <!-- 创作 -->
+                <div class="tile reveal-scale" style="--d:.5s">
+                    <img src="photos/陶艺.jpg" alt="陶艺">
+                    <span class="capsule editable">创作 · 陶艺</span>
+                </div>
+                <!-- 生活 -->
+                <div class="tile reveal-scale" style="--d:.6s">
+                    <img src="photos/桌游.jpeg" alt="桌游">
+                    <span class="capsule editable">生活 · 桌游</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= P6 · 接下来 ================= -->
+        <section class="slide slide-next">
+            <header class="slide-header">
+                <span class="brand">Maggie · <b>马竞</b></span>
+                <span class="tag"><em>06</em> / 06</span>
+            </header>
+
+            <div class="next-title reveal" style="--d:.05s">
+                <span class="section-kicker">Next</span>
+                <h2 class="section-title editable" style="margin-top:18px;">接下来</h2>
+            </div>
+
+            <div class="next-grid">
+                <div class="next-card reveal" style="--d:.15s">
+                    <div class="head"><span class="no">01</span><span class="t editable">吃透业务</span></div>
+                    <p class="d editable">完成 FLT 产线培训，尽快熟悉团队的业务场景，了解工作的重难点。</p>
+                </div>
+                <div class="next-card reveal" style="--d:.3s">
+                    <div class="head"><span class="no">02</span><span class="t editable">用好工具</span></div>
+                    <p class="d editable">学习 AI 相关文档与现有工具，快速进入状态。</p>
+                </div>
+                <div class="next-card reveal" style="--d:.45s">
+                    <div class="head"><span class="no">03</span><span class="t editable">融入团队</span></div>
+                    <p class="d editable">多跟大家交流请教，和团队共同进步。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<!-- 导航控件 -->
+<nav class="deck-controls" aria-label="幻灯片导航">
+    <button class="nav-btn" id="prevBtn" aria-label="上一页">‹</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="nextBtn" aria-label="下一页">›</button>
+    <span class="counter" id="counter"><b>01</b> / 06</span>
+</nav>
+
+<!-- 内联编辑入口 -->
+<div class="edit-hotzone" id="editHotzone"></div>
+<button class="edit-toggle" id="editToggle" title="编辑模式（E）">✎</button>
+
+<script>
+/* ===========================================
+   幻灯片控制器：舞台缩放 + 翻页导航
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.stage = document.getElementById('deckStage');
+        this.current = 0;
+        this.total = this.slides.length;
+
+        this.dotsEl = document.getElementById('dots');
+        this.counterEl = document.getElementById('counter');
+
+        this.buildDots();
+        this.setupScale();
+        this.setupKeyboard();
+        this.setupTouch();
+        this.setupWheel();
+        this.bindButtons();
+        this.show(0);
+    }
+
+    setupScale() {
+        const scale = () => {
+            const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth - 1920 * f) / 2;
+            const y = (window.innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        scale();
+        window.addEventListener('resize', scale);
+    }
+
+    buildDots() {
+        this.dots = [];
+        for (let i = 0; i < this.total; i++) {
+            const d = document.createElement('button');
+            d.className = 'dot';
+            d.setAttribute('aria-label', '第 ' + (i + 1) + ' 页');
+            d.addEventListener('click', () => this.show(i));
+            this.dotsEl.appendChild(d);
+            this.dots.push(d);
+        }
+    }
+
+    show(i) {
+        this.current = Math.max(0, Math.min(i, this.total - 1));
+        this.slides.forEach((s, idx) => {
+            s.classList.toggle('active', idx === this.current);
+            s.classList.toggle('visible', idx === this.current);
+        });
+        this.dots.forEach((d, idx) => d.classList.toggle('on', idx === this.current));
+        this.counterEl.innerHTML = '<b>' + String(this.current + 1).padStart(2, '0') + '</b> / ' + String(this.total).padStart(2, '0');
+    }
+
+    next() { this.show(this.current + 1); }
+    prev() { this.show(this.current - 1); }
+
+    bindButtons() {
+        document.getElementById('prevBtn').addEventListener('click', () => this.prev());
+        document.getElementById('nextBtn').addEventListener('click', () => this.next());
+    }
+
+    setupKeyboard() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.getAttribute('contenteditable')) return;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); this.next(); }
+            else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); this.prev(); }
+            else if (e.key === 'Home') { this.show(0); }
+            else if (e.key === 'End') { this.show(this.total - 1); }
+        });
+    }
+
+    setupTouch() {
+        let sx = null, sy = null;
+        this.stage.addEventListener('touchstart', (e) => {
+            sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+        }, { passive: true });
+        this.stage.addEventListener('touchend', (e) => {
+            if (sx === null) return;
+            const dx = e.changedTouches[0].clientX - sx;
+            const dy = e.changedTouches[0].clientY - sy;
+            if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+                dx < 0 ? this.next() : this.prev();
+            }
+            sx = sy = null;
+        }, { passive: true });
+    }
+
+    setupWheel() {
+        let lock = false;
+        window.addEventListener('wheel', (e) => {
+            if (lock) return;
+            if (Math.abs(e.deltaY) < 20) return;
+            lock = true;
+            e.deltaY > 0 ? this.next() : this.prev();
+            setTimeout(() => { lock = false; }, 650);
+        }, { passive: true });
+    }
+}
+
+/* ===========================================
+   内联编辑：悬停左上角 / 点击 / 按 E，Ctrl+S 保存到本地
+   =========================================== */
+class InlineEditor {
+    constructor() {
+        this.isActive = false;
+        this.editables = Array.from(document.querySelectorAll('.editable'));
+        this.toggle = document.getElementById('editToggle');
+        this.hotzone = document.getElementById('editHotzone');
+        this.bind();
+        this.restore();
+    }
+
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        this.editables.forEach(el => el.setAttribute('contenteditable', this.isActive));
+        this.toggle.classList.toggle('active', this.isActive);
+    }
+
+    bind() {
+        let hideT = null;
+        const show = () => { clearTimeout(hideT); this.toggle.classList.add('show'); };
+        const hide = () => { hideT = setTimeout(() => { if (!this.isActive) this.toggle.classList.remove('show'); }, 400); };
+
+        this.toggle.addEventListener('click', () => this.toggleEditMode());
+        this.hotzone.addEventListener('mouseenter', show);
+        this.hotzone.addEventListener('mouseleave', hide);
+        this.toggle.addEventListener('mouseenter', show);
+        this.toggle.addEventListener('mouseleave', hide);
+        this.hotzone.addEventListener('click', () => this.toggleEditMode());
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+                this.toggleEditMode();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's' && this.isActive) {
+                e.preventDefault();
+                this.save();
+            }
+        });
+
+        this.editables.forEach(el => el.addEventListener('input', () => this.save()));
+    }
+
+    save() {
+        const data = {};
+        this.editables.forEach((el, i) => { data[i] = el.innerHTML; });
+        localStorage.setItem('maggie-intro-edits', JSON.stringify(data));
+    }
+
+    restore() {
+        try {
+            const data = JSON.parse(localStorage.getItem('maggie-intro-edits'));
+            if (!data) return;
+            this.editables.forEach((el, i) => { if (data[i] != null) el.innerHTML = data[i]; });
+        } catch (e) { /* ignore */ }
+    }
+}
+
+new SlidePresentation();
+new InlineEditor();
+</script>
+</body>
+</html>
